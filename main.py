@@ -73,7 +73,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe['up'] = False
         print("Border is above head, don't move up")
 
-    # TODO: ingnore parts behind neck
+    # TODO: OPTIMIZE: ingnore parts behind neck
     # Prevent your Battlesnake from colliding with itself
     my_body = game_state['you']['body']
 
@@ -95,6 +95,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             is_move_safe['up'] = False
             print("Body is above head, don't move up")
 
+    # TODO: LOGIC: Fix battlesnake and opponent move onto the same square
     # Prevent your Battlesnake from colliding with other Battlesnakes
     opponents = game_state['board']['snakes']
 
@@ -127,10 +128,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         return {"move": "down"}
 
+    # TODO: LOGIC: Find better method than random
     # Choose a random move from the safe ones
     next_move = random.choice(safe_moves)
 
-    # TODO: better pathfinding
+    # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     food = game_state['board']['food']
 
