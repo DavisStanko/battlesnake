@@ -33,10 +33,10 @@ def end(game_state: typing.Dict):
 def move(game_state: typing.Dict) -> typing.Dict:
 
     is_move_safe = {
-      "up": True, 
-      "down": True, 
-      "left": True, 
-      "right": True
+        "up": True,
+        "down": True,
+        "left": True,
+        "right": True
     }
 
     # We've included code to prevent your Battlesnake from moving backwards
@@ -59,7 +59,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # Prevent your Battlesnake from moving out of bounds
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
-    
+
     if my_head['x'] == 0:
         is_move_safe['left'] = False
         print("Border is left of head, don't move left")
@@ -76,45 +76,44 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # TODO: ingnore parts behind neck
     # Prevent your Battlesnake from colliding with itself
     my_body = game_state['you']['body']
-    
+
     for body_part in my_body[1:]:
         # Check if body part is to the left of head
-        if body_part['x'] < my_head['x'] and body_part['y'] == my_head['y']:
+        if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
             is_move_safe['left'] = False
             print("Body is left of head, don't move left")
         # Check if body part is to the right of head
-        if body_part['x'] > my_head['x'] and body_part['y'] == my_head['y']:
+        if body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
             is_move_safe['right'] = False
             print("Body is right of head, don't move right")
         # Check if body part is below head
-        if body_part['y'] < my_head['y'] and body_part['x'] == my_head['x']:
+        if body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
             is_move_safe['down'] = False
             print("Body is below head, don't move down")
         # Check if body part is above head
-        if body_part['y'] > my_head['y'] and body_part['x'] == my_head['x']:
+        if body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
             is_move_safe['up'] = False
             print("Body is above head, don't move up")
 
-    # TODO: hotfix
     # Prevent your Battlesnake from colliding with other Battlesnakes
     opponents = game_state['board']['snakes']
-    
+
     for opponent in opponents:
         for body_part in opponent['body']:
             # Check if body part is to the left of head
-            if body_part['x'] < my_head['x'] and body_part['y'] == my_head['y']:
+            if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
                 is_move_safe['left'] = False
                 print("Opponent is left of head, don't move left")
             # Check if body part is to the right of head
-            if body_part['x'] > my_head['x'] and body_part['y'] == my_head['y']:
+            if body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
                 is_move_safe['right'] = False
                 print("Opponent is right of head, don't move right")
             # Check if body part is below head
-            if body_part['y'] < my_head['y'] and body_part['x'] == my_head['x']:
+            if body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
                 is_move_safe['down'] = False
                 print("Opponent is below head, don't move down")
             # Check if body part is above head
-            if body_part['y'] > my_head['y'] and body_part['x'] == my_head['x']:
+            if body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
                 is_move_safe['up'] = False
                 print("Opponent is above head, don't move up")
 
@@ -134,7 +133,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # TODO: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     food = game_state['board']['food']
-    
+
     if len(food) > 0:
         food = food[0]
         if my_head['x'] < food['x'] and is_move_safe['right']:
@@ -159,8 +158,8 @@ if __name__ == "__main__":
     from server import run_server
 
     run_server({
-        "info": info, 
-        "start": start, 
-         "move": move, 
+        "info": info,
+        "start": start,
+        "move": move,
         "end": end
     })
