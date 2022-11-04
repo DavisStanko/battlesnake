@@ -11,9 +11,9 @@ def info() -> typing.Dict:
     return {
         "apiversion": "1",
         "author": "",  # TODO: Your Battlesnake Username
-        "color": "#ffffff",  # TODO: Choose color
-        "head": "tiger-king",  # TODO: Choose head
-        "tail": "tiger-tail",  # TODO: Choose tail
+        "color": "#ffffff",
+        "head": "tiger-king",
+        "tail": "tiger-tail",
     }
 
 
@@ -39,7 +39,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         "right": True
     }
 
-    # We've included code to prevent your Battlesnake from moving backwards
+    # Prevent the Battlesnake from moving backwards
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
     my_neck = game_state["you"]["body"][1]  # Coordinates of your "neck"
 
