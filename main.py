@@ -135,20 +135,25 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # Move towards food instead of random, to regain health and survive longer
     food = game_state['board']['food']
 
-    if len(food) > 0:
-        food = food[0]
-        if my_head['x'] < food['x'] and is_move_safe['right']:
+    # Find the closest food
+    closest_food = None
+    closest_food_distance = 9999
+    for piece_of_food in food:
+        distance = abs(my_head['x'] - piece_of_food['x']) + abs(my_head['y'] - piece_of_food['y'])
+        if distance < closest_food_distance:
+            closest_food = piece_of_food
+            closest_food_distance = distance
+    
+    # Move towards the closest food
+    if closest_food is not None:
+        if my_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
-            print("Moving right towards food")
-        elif my_head['x'] > food['x'] and is_move_safe['left']:
+        elif my_head['x'] > closest_food['x'] and is_move_safe['left']:
             next_move = 'left'
-            print("Moving left towards food")
-        elif my_head['y'] < food['y'] and is_move_safe['up']:
+        elif my_head['y'] < closest_food['y'] and is_move_safe['up']:
             next_move = 'up'
-            print("Moving up towards food")
-        elif my_head['y'] > food['y'] and is_move_safe['down']:
+        elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-            print("Moving down towards food")
 
     print(f"MOVE {game_state['turn']}: {next_move}")
     return {"move": next_move}
