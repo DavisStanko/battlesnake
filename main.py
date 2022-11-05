@@ -1,5 +1,6 @@
 import random
 import typing
+import time
 
 # TODO: Fix battlesnake and opponent move onto the same square
 # TODO: Don't move into dead ends
@@ -32,6 +33,7 @@ def end(game_state: typing.Dict):
 # Valid moves are "up", "down", "left", or "right"
 # See https://docs.battlesnake.com/api/example-move for available data
 def move(game_state: typing.Dict) -> typing.Dict:
+    start = time.time()
 
     # list of valid moves
     is_move_safe = {
@@ -156,6 +158,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'down'
 
     print(f"MOVE {game_state['turn']}: {next_move}")
+    end = time.time()
+    stopwatch = end - start
+    print("Time: ", stopwatch)
     return {"move": next_move}
 
 
