@@ -2,7 +2,7 @@ import random
 import typing
 
 
-# TODO: Fix battlesnake and opponent move onto the same square
+# TODO: Puporselly turn into smaller snakes heads?
 # TODO: Don't move into dead ends
 # TODO: Purposefully kill other snakes?
 
