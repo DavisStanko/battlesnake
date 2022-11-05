@@ -1,10 +1,9 @@
 import random
 import typing
+from pathfinding.core.grid import Grid
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
-# and controls your Battlesnake's appearance
-# TIP: If you open your Battlesnake URL in a browser you should see this data
 def info() -> typing.Dict:
     print("INFO")
 
@@ -96,7 +95,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             print("Body is above head, don't move up")
 
     # TODO: LOGIC: Fix battlesnake and opponent move onto the same square
-    # Prevent your Battlesnake from colliding with other Battlesnakes
+    # Prevent the Battlesnake from colliding with other Battlesnakes
     opponents = game_state['board']['snakes']
 
     for opponent in opponents:
