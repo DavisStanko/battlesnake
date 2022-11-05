@@ -1,6 +1,5 @@
 import random
 import typing
-from pathfinding.core.grid import Grid
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -31,6 +30,7 @@ def end(game_state: typing.Dict):
 # See https://docs.battlesnake.com/api/example-move for available data
 def move(game_state: typing.Dict) -> typing.Dict:
 
+    # list of valid moves
     is_move_safe = {
         "up": True,
         "down": True,
@@ -38,7 +38,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         "right": True
     }
 
-    # We've included code to prevent your Battlesnake from moving backwards
+    # don't move backwards
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
     my_neck = game_state["you"]["body"][1]  # Coordinates of your "neck"
 
@@ -55,7 +55,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe["up"] = False
         print("Neck is above head, don't move up")
 
-    # Prevent your Battlesnake from moving out of bounds
+    # don't move out of bounds
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
 
@@ -127,10 +127,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         return {"move": "down"}
 
-    # TODO: LOGIC: Find better method than random
-    # Choose a random move from the safe ones
+    # TODO: LOGIC: Flood fill to find most area
+    # Random move if no food is detected
     next_move = random.choice(safe_moves)
-
+    
     # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     food = game_state['board']['food']
