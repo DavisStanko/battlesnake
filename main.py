@@ -1,12 +1,13 @@
 import random
 import typing
-import time
 
 # TODO: Fix battlesnake and opponent move onto the same square
 # TODO: Don't move into dead ends
 # TODO: Purposefully kill other snakes?
 
 # info is called when you create your Battlesnake on play.battlesnake.com
+
+
 def info() -> typing.Dict:
     print("INFO")
 
@@ -14,8 +15,8 @@ def info() -> typing.Dict:
         "apiversion": "1",
         "author": "Davis Stanko",
         "color": "#ff0000",
-        "head": "tiger-king",
-        "tail": "tiger-tail",
+        "head": "dragon",
+        "tail": "dragon",
     }
 
 
@@ -33,8 +34,6 @@ def end(game_state: typing.Dict):
 # Valid moves are "up", "down", "left", or "right"
 # See https://docs.battlesnake.com/api/example-move for available data
 def move(game_state: typing.Dict) -> typing.Dict:
-    start = time.time()
-
     # list of valid moves
     is_move_safe = {
         "up": True,
@@ -126,12 +125,15 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if isSafe:
             safe_moves.append(move)
 
+    # If no safe moves
     if len(safe_moves) == 0:
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         return {"move": "down"}
 
-    # Random move if no food is detected
-    next_move = random.choice(safe_moves)
+    # If only one option
+    if len(safe_moves) == 1:
+        print(f"MOVE {game_state['turn']}: {safe_moves[0]}")
+        return {"move": safe_moves[0]}
 
     # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
@@ -146,7 +148,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             closest_food = piece_of_food
             closest_food_distance = distance
 
-    # Move towards the closest food
+    # Move towards the closest food if it's safe
     if closest_food is not None:
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
@@ -156,11 +158,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'up'
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
+    else:
+        # Random move
+        next_move = random.choice(safe_moves)
 
     print(f"MOVE {game_state['turn']}: {next_move}")
-    end = time.time()
-    stopwatch = end - start
-    print("Time: ", stopwatch)
     return {"move": next_move}
 
 
