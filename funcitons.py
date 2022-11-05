@@ -18,6 +18,7 @@ def info() -> typing.Dict:
         "tail": "dragon",
     }
 
+
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
     print("GAME START")
@@ -99,53 +100,48 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"MOVE {game_state['turn']}: {safe_moves[0]}")
         return {"move": safe_moves[0]}
 
-
-
-
-      
   # ===================================================
     # Check for possible head on collisions
     for i in safe_moves:
-      nextMoves = []
-      
-      if i == "left":
-        nextMoves.append((my_head['x']-1, my_head['y']))
-      if i == "right":
-         nextMoves.append((my_head['x']+1, my_head['y']))
-      if i == "up":
-         nextMoves.append((my_head['x'], my_head['y']+1))
-      if i == "down":
-         nextMoves.append((my_head['x'], my_head['y']-1))
-        
-      adjacentSquares = []
-      for x in nextMoves:
-        adjacentSquares.append((x[0]-1, x[1]))
-        adjacentSquares.append((x[0]+1, x[1]))
-        adjacentSquares.append((x[0], x[1]-1))
-        adjacentSquares.append((x[0], x[1]+1))
-      
-      opponents = game_state['board']['snakes']
-      for x in opponents:
-        if x['id'] == game_state["you"]["id"]:
-          opponents.remove(x)
-          break
+        nextMoves = []
 
-      print(adjacentSquares)
-      print(opponents[0]["head"]['x'], opponents[0]["head"]['y'])
+        if i == "left":
+            nextMoves.append((my_head['x']-1, my_head['y']))
+        if i == "right":
+            nextMoves.append((my_head['x']+1, my_head['y']))
+        if i == "up":
+            nextMoves.append((my_head['x'], my_head['y']+1))
+        if i == "down":
+            nextMoves.append((my_head['x'], my_head['y']-1))
 
-      exit = False
-      for x in adjacentSquares:
-        for oppponent in opponents:
-          opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
-          if opponentHead == x:
-            print("NOT SAFE")
-            is_move_safe[i] = False
-            exit = True
-            break
-        if exit == True:
-          break
+        adjacentSquares = []
+        for x in nextMoves:
+            adjacentSquares.append((x[0]-1, x[1]))
+            adjacentSquares.append((x[0]+1, x[1]))
+            adjacentSquares.append((x[0], x[1]-1))
+            adjacentSquares.append((x[0], x[1]+1))
 
-      
+        opponents = game_state['board']['snakes']
+        for x in opponents:
+            if x['id'] == game_state["you"]["id"]:
+                opponents.remove(x)
+                break
+
+        print(adjacentSquares)
+        print(opponents[0]["head"]['x'], opponents[0]["head"]['y'])
+
+        exit = False
+        for x in adjacentSquares:
+            for oppponent in opponents:
+                opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
+                if opponentHead == x:
+                    print("NOT SAFE")
+                    is_move_safe[i] = False
+                    exit = True
+                    break
+            if exit == True:
+                break
+
     # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     foods = game_state['board']['food']
@@ -174,29 +170,29 @@ def move(game_state: typing.Dict) -> typing.Dict:
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
         else:
-          safe_moves = []
-          for move, isSafe in is_move_safe.items():
-            if isSafe:
-              safe_moves.append(move)
-          
-          try:
-            next_move = random.choice(safe_moves)
-          except:
-            # die
-            next_move = 'down'
-          print("NO SAFE MOVES")
+            safe_moves = []
+            for move, isSafe in is_move_safe.items():
+                if isSafe:
+                    safe_moves.append(move)
+
+            try:
+                next_move = random.choice(safe_moves)
+            except:
+                # die
+                next_move = 'down'
+            print("NO SAFE MOVES")
     else:
         # Random move
         safe_moves = []
         for move, isSafe in is_move_safe.items():
-          if isSafe:
-            safe_moves.append(move)
-        
+            if isSafe:
+                safe_moves.append(move)
+
         try:
-          next_move = random.choice(safe_moves)
+            next_move = random.choice(safe_moves)
         except:
-          # die
-          next_move = 'down'
+            # die
+            next_move = 'down'
         print("NO FOOD")
 
     print(f"MOVE {game_state['turn']}: {next_move}")
