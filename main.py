@@ -1,6 +1,8 @@
 import random
 import typing
 
+# TODO: Fix battlesnake and opponent move onto the same square
+# TODO: Don't move into dead ends
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
@@ -72,7 +74,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe['up'] = False
         print("Border is above head, don't move up")
 
-    # TODO: OPTIMIZE: ingnore parts behind neck
+    # OPTIMIZE: ingnore parts behind neck
     # Prevent your Battlesnake from colliding with itself
     my_body = game_state['you']['body']
 
@@ -94,7 +96,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
             is_move_safe['up'] = False
             print("Body is above head, don't move up")
 
-    # TODO: LOGIC: Fix battlesnake and opponent move onto the same square
     # Prevent the Battlesnake from colliding with other Battlesnakes
     opponents = game_state['board']['snakes']
 
@@ -127,10 +128,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         return {"move": "down"}
 
-    # TODO: LOGIC: Flood fill to find most area
     # Random move if no food is detected
     next_move = random.choice(safe_moves)
-    
+
     # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     food = game_state['board']['food']
@@ -143,7 +143,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if distance < closest_food_distance:
             closest_food = piece_of_food
             closest_food_distance = distance
-    
+
     # Move towards the closest food
     if closest_food is not None:
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
