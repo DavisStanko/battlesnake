@@ -3,6 +3,7 @@ import typing
 
 # TODO: Fix battlesnake and opponent move onto the same square
 # TODO: Don't move into dead ends
+# TODO: Purposefully kill other snakes?
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
@@ -98,7 +99,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # Prevent the Battlesnake from colliding with other Battlesnakes
     opponents = game_state['board']['snakes']
-
     for opponent in opponents:
         for body_part in opponent['body']:
             # Check if body part is to the left of head
