@@ -1,7 +1,7 @@
 import random
 import typing
 
-
+# TODO: readme
 # TODO: Purposefully turn into smaller snakes heads?
 # TODO: Don't move into dead ends
 # TODO: Purposefully kill other snakes?
