@@ -195,33 +195,46 @@ def move(game_state: typing.Dict) -> typing.Dict:
     if closest_food is not None:
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
+            print(f"{Fore.BLUE}MOVE {game_state['turn']} Moving towards food: {next_move}{Fore.RESET}")
+            return {"move": next_move}
         elif my_head['x'] > closest_food['x'] and is_move_safe['left']:
             next_move = 'left'
+            print(f"{Fore.BLUE}MOVE {game_state['turn']} Moving towards food: {next_move}{Fore.RESET}")
+            return {"move": next_move}
         elif my_head['y'] < closest_food['y'] and is_move_safe['up']:
             next_move = 'up'
+            print(f"{Fore.BLUE}MOVE {game_state['turn']} Moving towards food: {next_move}{Fore.RESET}")
+            return {"move": next_move}
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-        # If no safe moves go to the closest food
+            print(f"{Fore.BLUE}MOVE {game_state['turn']} Moving towards food: {next_move}{Fore.RESET}")
+            return {"move": next_move}
+
+        # If no safe moves go to the closest food then move randomly
         else:
             print(Fore.YELLOW + "No safe moves towards food" + Fore.RESET)
-        try:
             # random safe move
-            next_move = random.choice(safe_moves)
-        except:
-            # die
-            next_move = 'down'
-            print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
+            try:
+                next_move = random.choice(safe_moves)
+                print(f"{Fore.BLUE}MOVE {game_state['turn']} Random: {next_move}{Fore.RESET}")
+                return {"move": next_move}
+            # no safe moves left
+            except:
+                # die
+                next_move = 'down'
+                print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
+                return {"move": next_move}
+    
     # If no food is left, move randomly
     else:
         print(Back.RED + "No food left, moving randomly" + Back.RESET)
+        # random safe move
         try:
-            # random safe move
             next_move = random.choice(safe_moves)
+            print(f"{Fore.BLUE}MOVE {game_state['turn']} Random: {next_move}{Fore.RESET}")
+            return {"move": next_move}
+        # no safe moves left
         except:
-            # die
             next_move = 'down'
             print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
-        print("NO FOOD")
-
-    print(f"{Fore.BLUE}MOVE {game_state['turn']}: {next_move}" + Fore.RESET)
-    return {"move": next_move}
+            return {"move": next_move}
