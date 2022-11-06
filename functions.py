@@ -3,6 +3,7 @@ import typing
 
 # TODO: readme
 # TODO: Purposefully turn into smaller snakes heads?
+# TODO: Deal with hazard
 # TODO: Don't move into dead ends
 # TODO: Purposefully kill other snakes?
 
@@ -44,7 +45,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # don't move backwards
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
-    my_neck = game_state["you"]["body"][1]  # Coordinates of your "neck"
 
     # don't move out of bounds
     board_width = game_state['board']['width']
@@ -128,7 +128,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 break
 
         print(adjacentSquares)
-        print(opponents[0]["head"]['x'], opponents[0]["head"]['y'])
+        # print(opponents[0]["head"]['x'], opponents[0]["head"]['y'])
 
         exit = False
         for x in adjacentSquares:
