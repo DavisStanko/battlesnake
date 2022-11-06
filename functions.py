@@ -137,29 +137,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
             future_moves.append((x[0], x[1]-1))
             future_moves.append((x[0], x[1]+1))
 
-        # check for dead ends created by other snakes or the board
-        temp_safe_moves = safe_moves.copy()
-        for i in future_moves:
-            if i[0] == 0 or i[0] == board_width - 1 or i[1] == 0 or i[1] == board_height - 1:
-                temp_safe_moves.remove(i)
-            for Snake in snakes:
-                for body_part in Snake['body']:
-                    if body_part['x'] == i[0] and body_part['y'] == i[1]:
-                        temp_safe_moves.remove(i)
-
-        # if all moves are dead ends, do nothing
-        if len(temp_safe_moves) == 0:
-            print(Fore.YELLOW + "All safe moves are potential dead ends" + Fore.RESET)
-
-        # get all moves that are not dead ends
-        else:
-            safe_moves = temp_safe_moves.copy()
-
-            # If only one option is left
-            if len(safe_moves) == 1:
-                print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one move: {safe_moves[0]}{Fore.RESET}")
-                return {"move": safe_moves[0]}
-
         # Get list of all snake bodies
         opponents = game_state['board']['snakes']
         # Remove myself from the list of opponents
