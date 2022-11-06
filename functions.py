@@ -2,6 +2,8 @@ import random
 import typing
 
 # info is called when you create your Battlesnake on play.battlesnake.com
+
+
 def info() -> typing.Dict:
     print("INFO")
 
@@ -116,13 +118,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
             adjacentSquares.append((x[0], x[1]+1))
 
         opponents = game_state['board']['snakes']
+        # Remove myself from the list of opponents
         for x in opponents:
             if x['id'] == game_state["you"]["id"]:
                 opponents.remove(x)
                 break
-
-        print(adjacentSquares)
-        # print(opponents[0]["head"]['x'], opponents[0]["head"]['y'])
 
         exit = False
         for x in adjacentSquares:
@@ -136,11 +136,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
             if exit == True:
                 break
 
-    # TODO: LOGIC: better pathfinding
     # Move towards food instead of random, to regain health and survive longer
     foods = game_state['board']['food']
-
-    dafood = (-1, -1)
 
     # Find the closest food
     closest_food = None
