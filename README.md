@@ -28,11 +28,13 @@ The snake currently does the following when prompted to move:
 3. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
 
-4. Purposefully kill other snakes?
+4. Consider enemy tails safe.
+    Enemy snake tails will move out of the way meaning that the square they occupy is safe **unless** they eat an apple. Therefore checking for what opponents are able to eat apples and considering tails safe based on that would raise the number of possible moves for my snake,
 
+5. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
 
-5. Change snake philosophy.
+9. Change snake philosophy.
     - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
 
 
