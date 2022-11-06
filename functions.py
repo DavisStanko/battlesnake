@@ -19,7 +19,9 @@ def info() -> typing.Dict:
 
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
-    print(Fore.GREEN + "GAME START" + Fore.RESET)
+    print(Fore.GREEN + "GAME START")
+    # print game id to watch game later
+    print(game_state["game"]["id"] + Fore.RESET)
 
 
 # end is called when your Battlesnake finishes a game
