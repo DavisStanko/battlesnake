@@ -64,13 +64,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
     snakes = game_state['board']['snakes']
     for Snake in snakes:
         for head in Snake['body'][0]:
-            # remove tail if head not beside food
-            # get head position
-            head = head['x'], head['y']
             # check for food in 4 directions
             foods = game_state['board']['food']
-            for i in foods:
-                food = i['x'], i['y']
+            for food in foods:
                 if head == food:
                     print("Food found")
                     # check if head is beside food
