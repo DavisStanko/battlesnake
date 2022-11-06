@@ -15,10 +15,10 @@ The snake currently does the following when prompted to move:
     - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
 2. Avoids possible head on collisions with bigger or equally sized snakes.
     - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
-3. Attempt possible head on collisions with smaller snakes.
+3. Attempts possible head on collisions with smaller snakes.
     - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
 4. Finds the closest apple
-5. Move towards the closest apple.
+5. Moves towards the closest apple.
 
 ## Next Steps
 
