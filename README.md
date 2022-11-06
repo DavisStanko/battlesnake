@@ -9,9 +9,10 @@ Battlesnake is a multiplayer snake game where your snake is controlled by code. 
 The snake currently does the following when prompted to move:
 
 1. Decides against moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
-    - If there are no safe moves it moves down just in case (read why in the next steps section).
+    - If there are no safe moves it moves down (helps to differentiate between purposeful move and error since errors make the snake move up).
     - If there is one safe move it moves there.
     - If there are multiple safe moves, it continues its' calculations.
+    - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
 2. Avoids possible head on collisions with bigger or equally sized snakes.
     - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
 3. Attempt possible head on collisions with smaller snakes.
@@ -21,7 +22,7 @@ The snake currently does the following when prompted to move:
 
 ## Next Steps
 
-0. Deal with multiple "safe" moves where the only choices are possible deadly on collisions.
+0. Deal with multiple "safe" moves where the only choices are possible deadly head on collisions.
     - **Theoretically this has been fixed but it has yet to be tested in a real game as this situation is rare.**
     - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
 
@@ -33,9 +34,6 @@ The snake currently does the following when prompted to move:
 
 3. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
-
-4. Consider enemy tails safe.
-    Enemy snake tails will move out of the way meaning that the square they occupy is safe **unless** they eat an apple. Therefore checking for what opponents are able to eat apples and considering tails safe based on that would raise the number of possible moves for my snake,
 
 5. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
