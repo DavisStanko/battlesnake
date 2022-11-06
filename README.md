@@ -21,6 +21,9 @@ The snake currently does the following when prompted to move:
 
 ## Next Steps
 
+0.  **HOTFIX** Deal with multiple "safe" moves where the only choices are possible deadly on collisions.
+    - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
+
 1. Deal with hazard sauce.
     - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
 
