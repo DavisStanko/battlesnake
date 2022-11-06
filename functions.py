@@ -22,11 +22,7 @@ def start(game_state: typing.Dict):
 
 # end is called when your Battlesnake finishes a game
 def end(game_state: typing.Dict):
-    # print win or lose
-    if game_state["you"]["health"] > 0:
-        print(Fore.GREEN + "WIN")
-    else:
-        print(Fore.RED + "LOSS")
+    print(Fore.GREEN + "GAME END")
 
 # move is called on every turn and returns your next move
 # Valid moves are "up", "down", "left", or "right"
@@ -89,7 +85,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # If no safe moves are left
     if len(safe_moves) == 0:
-        print(f"{Fore.RED}MOVE {game_state['turn']} No safe moves left, moving down")
+        print(f"{Back.RED}MOVE {game_state['turn']} No safe moves left, moving down")
         return {"move": "down"}
 
     # If only one option is left
@@ -185,18 +181,18 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'up'
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-        # 
+        # Error handling
         else:
-            print(Fore.RED + "Error: No safe moves detected after food check")
+            print(Back.RED + "Error: No safe moves detected after food check")
     # If no food is left, move randomly
     else:
-        print(Fore.RED + "No food left, moving randomly")
+        print(Back.RED + "No food left, moving randomly")
         try:
             next_move = random.choice(safe_moves)
         except:
             # die
             next_move = 'down'
-            print(Fore.RED + "Error: No safe moves detected. Moving down.")
+            print(Back.RED + "Error: No safe moves detected. Moving down.")
         print("NO FOOD")
 
     print(f"{Fore.BLUE}MOVE {game_state['turn']}: {next_move}")
