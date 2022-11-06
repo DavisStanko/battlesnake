@@ -3,6 +3,8 @@ import typing
 from colorama import Fore, Back
 
 # info is called when you create your Battlesnake on play.battlesnake.com
+
+
 def info() -> typing.Dict:
     print("INFO")
 
@@ -27,6 +29,8 @@ def end(game_state: typing.Dict):
 # move is called on every turn and returns your next move
 # Valid moves are "up", "down", "left", or "right"
 # See https://docs.battlesnake.com/api/example-move for available data
+
+
 def move(game_state: typing.Dict) -> typing.Dict:
     # list of valid moves
     is_move_safe = {
@@ -131,7 +135,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
                 if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
                     print(Fore.YELLOW + "NOT SAFE" + Fore.RESET)
-                    temp_is_move_safe[i] = False # Mark the move as potentially unsafe
+                    temp_is_move_safe[i] = False  # Mark the move as potentially unsafe
                     exit = True
                     break
                 if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
@@ -143,7 +147,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         # if all moves could result in a deadly head on collision, do nothing.
         if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
             print(Fore.YELLOW + "All safe moves are potential deadly head on collisions" + Fore.RESET)
-            
+
         # get all moves that are not potential deadly head on collisions
         else:
             is_move_safe = temp_is_move_safe.copy()
