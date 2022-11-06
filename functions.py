@@ -1,9 +1,8 @@
 import random
 import typing
 
+
 # info is called when you create your Battlesnake on play.battlesnake.com
-
-
 def info() -> typing.Dict:
     print("INFO")
 
@@ -39,7 +38,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         "right": True
     }
 
-    # don't move backwards
+    # define the head of the snake
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
 
     # don't move out of bounds
@@ -59,26 +58,26 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe['up'] = False
         print("Border is above head, don't move up")
 
-    # Prevent the Battlesnake from colliding with other Battlesnakes
-    opponents = game_state['board']['snakes']
-    for opponent in opponents:
-        for body_part in opponent['body']:
+    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    snakes = game_state['board']['snakes']
+    for Snake in snakes:
+        for body_part in Snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
                 is_move_safe['left'] = False
-                print("Opponent is left of head, don't move left")
+                print("Snake is left of head, don't move left")
             # Check if body part is to the right of head
             if body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
                 is_move_safe['right'] = False
-                print("Opponent is right of head, don't move right")
+                print("Snake is right of head, don't move right")
             # Check if body part is below head
             if body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
                 is_move_safe['down'] = False
-                print("Opponent is below head, don't move down")
+                print("Snake is below head, don't move down")
             # Check if body part is above head
             if body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
                 is_move_safe['up'] = False
-                print("Opponent is above head, don't move up")
+                print("Snake is above head, don't move up")
 
     # Are there any safe moves left?
     safe_moves = []
@@ -86,12 +85,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if isSafe:
             safe_moves.append(move)
 
-    # If no safe moves
+    # If no safe moves are left
     if len(safe_moves) == 0:
         print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
         return {"move": "down"}
 
-    # If only one option
+    # If only one option is left
     if len(safe_moves) == 1:
         print(f"MOVE {game_state['turn']}: {safe_moves[0]}")
         return {"move": safe_moves[0]}
@@ -101,6 +100,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     for i in safe_moves:
         nextMoves = []
 
+        # Get the coordinates for each safe move
         if i == "left":
             nextMoves.append((my_head['x']-1, my_head['y']))
         if i == "right":
@@ -110,6 +110,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if i == "down":
             nextMoves.append((my_head['x'], my_head['y']-1))
 
+        # Get the coordinates for each safe move's adjacent tile
         adjacentSquares = []
         for x in nextMoves:
             adjacentSquares.append((x[0]-1, x[1]))
@@ -124,36 +125,55 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 opponents.remove(x)
                 break
 
+        # Check if any of the adjacent squares are occupied by an opponent
+        temp_is_move_safe = is_move_safe.copy()
         exit = False
         for x in adjacentSquares:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
-                if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]): # If the opponent is bigger than me
+                if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
                     print("NOT SAFE")
-                    is_move_safe[i] = False
+                    temp_is_move_safe[i] = False # Mark the move as potentially unsafe
                     exit = True
                     break
-                if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]): # If the opponent is smaller than me
-                    return {"move": i} # Try to kill the opponent
+                if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
+                    return {"move": i}  # Try to kill the opponent
             if exit == True:
                 break
 
-    # Move towards food instead of random, to regain health and survive longer
+        # if all moves could result in a deadly head on collision, do nothing.
+        if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
+            print("All safe moves are potential deadly head on collisions")
+            
+        # get all moves that are not potential deadly head on collisions
+        else:
+            is_move_safe = temp_is_move_safe.copy()
+
+            # Are there any safe moves left?
+            safe_moves = []
+            for move, isSafe in is_move_safe.items():
+                if isSafe:
+                    safe_moves.append(move)
+
+            # If only one option is left
+            if len(safe_moves) == 1:
+                print(f"MOVE {game_state['turn']}: {safe_moves[0]}")
+                return {"move": safe_moves[0]}
+
+    # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
     foods = game_state['board']['food']
 
     # Find the closest food
     closest_food = None
-    closest_food_distance = 9999
+    closest_food_distance = 9999  # Start with an impossibly large number
     for piece_of_food in foods:
         distance = abs(my_head['x'] - piece_of_food['x']) + abs(my_head['y'] - piece_of_food['y'])
         if distance < closest_food_distance:
             closest_food = piece_of_food
             closest_food_distance = distance
-            dafood = piece_of_food
 
     # Move towards the closest food if it's safe
     if closest_food is not None:
-        print(is_move_safe)
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
         elif my_head['x'] > closest_food['x'] and is_move_safe['left']:
@@ -162,30 +182,18 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'up'
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
+        # 
         else:
-            safe_moves = []
-            for move, isSafe in is_move_safe.items():
-                if isSafe:
-                    safe_moves.append(move)
-
-            try:
-                next_move = random.choice(safe_moves)
-            except:
-                # die
-                next_move = 'down'
-            print("NO SAFE MOVES")
+            print("Error: No safe moves detected after food check")
+    # If no food is left, move randomly
     else:
-        # Random move
-        safe_moves = []
-        for move, isSafe in is_move_safe.items():
-            if isSafe:
-                safe_moves.append(move)
-
+        print("No food left, moving randomly")
         try:
             next_move = random.choice(safe_moves)
         except:
             # die
             next_move = 'down'
+            print("Error: No safe moves detected. Moving down.")
         print("NO FOOD")
 
     print(f"MOVE {game_state['turn']}: {next_move}")
