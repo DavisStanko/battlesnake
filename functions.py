@@ -45,16 +45,16 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     if my_head['x'] == 0:
         is_move_safe['left'] = False
-        print("Border is left of head, don't move left")
+        print("Border left")
     if my_head['x'] == board_width - 1:
         is_move_safe['right'] = False
-        print("Border is right of head, don't move right")
+        print("Border right")
     if my_head['y'] == 0:
         is_move_safe['down'] = False
-        print("Border is below head, don't move down")
+        print("Border below ")
     if my_head['y'] == board_height - 1:
         is_move_safe['up'] = False
-        print("Border is above head, don't move up")
+        print("Border above ")
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     snakes = game_state['board']['snakes']
@@ -63,19 +63,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # Check if body part is to the left of head
             if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
                 is_move_safe['left'] = False
-                print("Snake is left of head, don't move left")
+                print("Snake left")
             # Check if body part is to the right of head
             if body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
                 is_move_safe['right'] = False
-                print("Snake is right of head, don't move right")
+                print("Snake right")
             # Check if body part is below head
             if body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
                 is_move_safe['down'] = False
-                print("Snake is below head, don't move down")
+                print("Snake below")
             # Check if body part is above head
             if body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
                 is_move_safe['up'] = False
-                print("Snake is above head, don't move up")
+                print("Snake above")
 
     # Are there any safe moves left?
     safe_moves = []
