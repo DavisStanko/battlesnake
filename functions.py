@@ -156,7 +156,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
             # If only one option is left
             if len(safe_moves) == 1:
-                print(f"{Fore.YELLOW}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}{Fore.RESET}")
+                print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one move: {safe_moves[0]}{Fore.RESET}")
                 return {"move": safe_moves[0]}
 
     # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
