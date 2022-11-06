@@ -24,14 +24,14 @@ The snake currently does the following when prompted to move:
 
 ### Important
 
-0. Deal with multiple "safe" moves where the only choices are possible deadly head on collisions.
+1. Deal with multiple "safe" moves where the only choices are possible deadly head on collisions.
     - **Theoretically this has been fixed but it has yet to be tested in a real game as this situation is rare.**
     - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
 
-1. Don't move into dead ends.
+2. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
 
-2. Choose best option when attempting to kill a snake via head on collision.
+3. Choose best option when attempting to kill a snake via head on collision.
     - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will just pick the first instead of the best.
 
 ### Things to consider
