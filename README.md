@@ -19,19 +19,22 @@ The snake currently does the following when prompted to move:
 
 ## Next Steps
 
-1. Purposefully turn into smaller snakes heads?
+1. Purposefully turn into smaller snakes heads.
     - The code to avoid other snakes head could be reused to opt to attempt to collide head on with other snakes when the collision would result in their death. However, this collision rarely be guaranteed as the other snake could have it's own collision avoidance system.
 
-2. Deal with hazard sauce
-
+2. Deal with hazard sauce.
     - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
 
-3. Don't move into dead ends
+3. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
 
 4. Purposefully kill other snakes?
 
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
+
+5. Change snake philosophy.
+    - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
+
 
 ## License
 
