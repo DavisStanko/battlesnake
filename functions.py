@@ -85,12 +85,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # If no safe moves are left
     if len(safe_moves) == 0:
-        print(f"{Back.RED}MOVE {game_state['turn']} No safe moves left, moving down{Back.RESET}")
+        print(f"{Back.RED}MOVE {game_state['turn']} No safe moves: Moving down{Back.RESET}")
         return {"move": "down"}
 
     # If only one option is left
     if len(safe_moves) == 1:
-        print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}{Fore.RESET}")
+        print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one move: {safe_moves[0]}{Fore.RESET}")
         return {"move": safe_moves[0]}
 
   # ===================================================
