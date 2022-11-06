@@ -27,7 +27,7 @@ The snake currently does the following when prompted to move:
     - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
 
 1. Choose best option when attempting to kill a snake via head on collision.
-    - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will jsut pick the first instead of the best.
+    - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will just pick the first instead of the best.
 
 2. Deal with hazard sauce.
     - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
@@ -35,10 +35,10 @@ The snake currently does the following when prompted to move:
 3. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
 
-5. Purposefully kill other snakes?
+4. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
 
-6. Change snake philosophy.
+5. Change snake philosophy.
     - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
 
 ## License
