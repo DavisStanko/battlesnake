@@ -113,8 +113,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one move: {safe_moves[0]}{Fore.RESET}")
         return {"move": safe_moves[0]}
 
-  # ===================================================
-    # Check for possible head on collisions
+  # =================================================================================================
+
+    # Check future moves
     for i in safe_moves:
         nextMoves = []
 
@@ -129,13 +130,37 @@ def move(game_state: typing.Dict) -> typing.Dict:
             nextMoves.append((my_head['x'], my_head['y']-1))
 
         # Get the coordinates for each safe move's adjacent tile
-        adjacentSquares = []
+        future_moves = []
         for x in nextMoves:
-            adjacentSquares.append((x[0]-1, x[1]))
-            adjacentSquares.append((x[0]+1, x[1]))
-            adjacentSquares.append((x[0], x[1]-1))
-            adjacentSquares.append((x[0], x[1]+1))
+            future_moves.append((x[0]-1, x[1]))
+            future_moves.append((x[0]+1, x[1]))
+            future_moves.append((x[0], x[1]-1))
+            future_moves.append((x[0], x[1]+1))
 
+        # check for dead ends created by other snakes or the board
+        temp_safe_moves = safe_moves.copy()
+        for i in future_moves:
+            if i[0] == 0 or i[0] == board_width - 1 or i[1] == 0 or i[1] == board_height - 1:
+                temp_safe_moves.remove(i)
+            for Snake in snakes:
+                for body_part in Snake['body']:
+                    if body_part['x'] == i[0] and body_part['y'] == i[1]:
+                        temp_safe_moves.remove(i)
+
+        # if all moves are dead ends, do nothing
+        if len(temp_safe_moves) == 0:
+            print(Fore.YELLOW + "All safe moves are potential dead ends" + Fore.RESET)
+
+        # get all moves that are not dead ends
+        else:
+            safe_moves = temp_safe_moves.copy()
+
+            # If only one option is left
+            if len(safe_moves) == 1:
+                print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one move: {safe_moves[0]}{Fore.RESET}")
+                return {"move": safe_moves[0]}
+
+        # Get list of all snake bodies
         opponents = game_state['board']['snakes']
         # Remove myself from the list of opponents
         for x in opponents:
@@ -143,10 +168,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 opponents.remove(x)
                 break
 
-        # Check if any of the adjacent squares are occupied by an opponent
+        # Check if any of the adjacent squares are occupied by an opponent to predict head on collisions
         temp_is_move_safe = is_move_safe.copy()
         exit = False
-        for x in adjacentSquares:
+        for x in future_moves:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
                 if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
@@ -224,7 +249,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 next_move = 'down'
                 print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
                 return {"move": next_move}
-    
+
     # If no food is left, move randomly
     else:
         print(Back.RED + "No food left, moving randomly" + Back.RESET)
