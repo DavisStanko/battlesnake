@@ -201,13 +201,21 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'up'
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-        # Error handling
+        # If no safe moves go to the closest food
         else:
-            print(Back.RED + "Error: No safe moves detected after food check" + Back.RESET)
+            print(Fore.YELLOW + "No safe moves towards food" + Fore.RESET)
+        try:
+            # random safe move
+            next_move = random.choice(safe_moves)
+        except:
+            # die
+            next_move = 'down'
+            print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
     # If no food is left, move randomly
     else:
         print(Back.RED + "No food left, moving randomly" + Back.RESET)
         try:
+            # random safe move
             next_move = random.choice(safe_moves)
         except:
             # die
