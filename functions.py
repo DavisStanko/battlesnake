@@ -78,9 +78,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
                         print("Food not beside head")
                         # remove tail
                         del Snake['body'][-1]
-    
+
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
-    for Snake in snakes:    
+    for Snake in snakes:
         for body_part in Snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
