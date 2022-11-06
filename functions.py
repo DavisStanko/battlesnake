@@ -128,11 +128,13 @@ def move(game_state: typing.Dict) -> typing.Dict:
         for x in adjacentSquares:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
-                if opponentHead == x:
+                if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]): # If the opponent is bigger than me
                     print("NOT SAFE")
                     is_move_safe[i] = False
                     exit = True
                     break
+                if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]): # If the opponent is smaller than me
+                    return {"move": i} # Try to kill the opponent
             if exit == True:
                 break
 
