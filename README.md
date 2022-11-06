@@ -21,7 +21,8 @@ The snake currently does the following when prompted to move:
 
 ## Next Steps
 
-0. **HOTFIX** Deal with multiple "safe" moves where the only choices are possible deadly on collisions.
+0. Deal with multiple "safe" moves where the only choices are possible deadly on collisions.
+    - **Theoretically this has been fixed but it has yet to be tested in a real game as this situation is rare.**
     - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
 
 1. Choose best option when attempting to kill a snake via head on collision.
