@@ -17,12 +17,12 @@ def info() -> typing.Dict:
 
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
-    print(Fore.GREEN + "GAME START")
+    print(Fore.GREEN + "GAME START" + Fore.RESET)
 
 
 # end is called when your Battlesnake finishes a game
 def end(game_state: typing.Dict):
-    print(Fore.GREEN + "GAME END")
+    print(Fore.GREEN + "GAME END" + Fore.RESET)
 
 # move is called on every turn and returns your next move
 # Valid moves are "up", "down", "left", or "right"
@@ -85,12 +85,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # If no safe moves are left
     if len(safe_moves) == 0:
-        print(f"{Back.RED}MOVE {game_state['turn']} No safe moves left, moving down")
+        print(f"{Back.RED}MOVE {game_state['turn']} No safe moves left, moving down{Back.RESET}")
         return {"move": "down"}
 
     # If only one option is left
     if len(safe_moves) == 1:
-        print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}")
+        print(f"{Fore.BLUE}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}{Fore.RESET}")
         return {"move": safe_moves[0]}
 
   # ===================================================
@@ -130,19 +130,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
                 if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
-                    print(Fore.YELLOW + "NOT SAFE")
+                    print(Fore.YELLOW + "NOT SAFE" + Fore.RESET)
                     temp_is_move_safe[i] = False # Mark the move as potentially unsafe
                     exit = True
                     break
                 if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
-                    print(Fore.YELLOW + "attempt to kill")
+                    print(Fore.YELLOW + "attempt to kill" + Fore.RESET)
                     return {"move": i}  # Try to kill the opponent
             if exit == True:
                 break
 
         # if all moves could result in a deadly head on collision, do nothing.
         if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
-            print(Fore.YELLOW + "All safe moves are potential deadly head on collisions")
+            print(Fore.YELLOW + "All safe moves are potential deadly head on collisions" + Fore.RESET)
             
         # get all moves that are not potential deadly head on collisions
         else:
@@ -156,7 +156,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
             # If only one option is left
             if len(safe_moves) == 1:
-                print(f"{Fore.YELLOW}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}")
+                print(f"{Fore.YELLOW}MOVE {game_state['turn']} Only one safe move left, moving {safe_moves[0]}{Fore.RESET}")
                 return {"move": safe_moves[0]}
 
     # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
@@ -183,17 +183,17 @@ def move(game_state: typing.Dict) -> typing.Dict:
             next_move = 'down'
         # Error handling
         else:
-            print(Back.RED + "Error: No safe moves detected after food check")
+            print(Back.RED + "Error: No safe moves detected after food check" + Back.RESET)
     # If no food is left, move randomly
     else:
-        print(Back.RED + "No food left, moving randomly")
+        print(Back.RED + "No food left, moving randomly" + Back.RESET)
         try:
             next_move = random.choice(safe_moves)
         except:
             # die
             next_move = 'down'
-            print(Back.RED + "Error: No safe moves detected. Moving down.")
+            print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
         print("NO FOOD")
 
-    print(f"{Fore.BLUE}MOVE {game_state['turn']}: {next_move}")
+    print(f"{Fore.BLUE}MOVE {game_state['turn']}: {next_move}" + Fore.RESET)
     return {"move": next_move}
