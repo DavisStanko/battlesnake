@@ -14,29 +14,27 @@ The snake currently does the following when prompted to move:
     - If there are multiple safe moves, it continues its' calculations.
 2. Avoids possible head on collisions with bigger or equally sized snakes.
     - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
-3. Finds the closest apple
-4. Move towards the closest apple.
+3. Attempt possible head on collisions with smaller snakes.
+    - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
+4. Finds the closest apple
+5. Move towards the closest apple.
 
 ## Next Steps
 
-1. Purposefully turn into smaller snakes heads.
-    - The code to avoid other snakes head could be reused to opt to attempt to collide head on with other snakes when the collision would result in their death. However, this collision rarely be guaranteed as the other snake could have it's own collision avoidance system.
-
-2. Deal with hazard sauce.
+1. Deal with hazard sauce.
     - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
 
-3. Don't move into dead ends.
+2. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
 
-4. Consider enemy tails safe.
+3. Consider enemy tails safe.
     Enemy snake tails will move out of the way meaning that the square they occupy is safe **unless** they eat an apple. Therefore checking for what opponents are able to eat apples and considering tails safe based on that would raise the number of possible moves for my snake,
 
-5. Purposefully kill other snakes?
+4. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
 
-9. Change snake philosophy.
+5. Change snake philosophy.
     - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
-
 
 ## License
 
