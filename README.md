@@ -1,20 +1,40 @@
-# Battlesnake Python Starter Project
+# My Main Battlesnake
 
-### An official Battlesnake template written in Python. Get started at [play.battlesnake.com](https://play.battlesnake.com).
+### What is Battlesnake?
 
-![Battlesnake Logo](https://media.battlesnake.com/social/StarterSnakeGitHubRepos_Python.png)
+Battlesnake is a multiplayer snake game where your snake is controlled by code. It is not limited just to Python and can be set up easily and for free using [replit](https://replit). Get started at [play.battlesnake.com](https://play.battlesnake.com).
 
-This project is a great starting point for anyone wanting to program their first Battlesnake in Python. It can be run locally or easily deployed to a cloud provider of your choosing. See the [Battlesnake API Docs](https://docs.battlesnake.com/api) for more detail. 
+## Behavior
 
-## Technologies Used
+The snake currently does the following when prompted to move:
 
-This project uses [Python 3](https://www.python.org/) and [Flask](https://flask.palletsprojects.com/).
-
-## Run Your Battlesnake
-
-1. Click the green 'Run' button to start your Battlesnake.
-2. Use your repl.co URL to register your Battlesnake and play games on [play.battlesnake.com](https://play.battlesnake.com).
+1. Decides against moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
+    - If there are no safe moves it moves down just in case (read why in the next steps section).
+    - If there is one safe move it moves there.
+    - If there are multiple safe moves, it continues its' calculations.
+2. Avoids possible head on collisions with bigger or equally sized snakes.
+    - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
+3. Finds the closest apple
+4. Move towards the closest apple.
 
 ## Next Steps
 
-Continue with the [Battlesnake Quickstart Guide](https://docs.battlesnake.com/quickstart) to customize and improve your Battlesnake's behavior.
+1. Purposefully turn into smaller snakes heads?
+    - The code to avoid other snakes head could be reused to opt to attempt to collide head on with other snakes when the collision would result in their death. However, this collision rarely be guaranteed as the other snake could have it's own collision avoidance system.
+
+2. Deal with hazard sauce
+
+    - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
+
+3. Don't move into dead ends
+    - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
+
+4. Purposefully kill other snakes?
+
+    - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
+
+## License
+
+This project is licensed under the [GPL-3.0](LICENSE.md)
+GNU General Public License - see the [LICENSE.md](LICENSE.md) file for
+details.

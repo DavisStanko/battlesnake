@@ -1,12 +1,6 @@
 import random
 import typing
 
-# TODO: readme
-# TODO: Purposefully turn into smaller snakes heads?
-# TODO: Deal with hazard
-# TODO: Don't move into dead ends
-# TODO: Purposefully kill other snakes?
-
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
     print("INFO")
