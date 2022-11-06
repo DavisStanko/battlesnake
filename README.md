@@ -1,6 +1,6 @@
 # My Main Battlesnake
 
-### What is Battlesnake?
+## What is Battlesnake?
 
 Battlesnake is a multiplayer snake game where your snake is controlled by code. It is not limited just to Python and can be set up easily and for free using [replit](https://replit). Get started at [play.battlesnake.com](https://play.battlesnake.com).
 
