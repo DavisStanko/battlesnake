@@ -60,9 +60,27 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe['up'] = False
         print("Border above ")
 
-    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    # ignore the tail of the snakes if they can't eat food
     snakes = game_state['board']['snakes']
     for Snake in snakes:
+        for head in Snake['body'][0]:
+            # remove tail if head not beside food
+            # get head position
+            head = head['x'], head['y']
+            # check for food in 4 directions
+            foods = game_state['board']['food']
+            for i in foods:
+                food = i['x'], i['y']
+                if head == food:
+                    print("Food found")
+                    # check if head is beside food
+                    if head[0] != food[0] - 1 and head[0] != food[0] + 1 and head[1] != food[1] - 1 and head[1] != food[1] + 1:
+                        print("Food not beside head")
+                        # remove tail
+                        del Snake['body'][-1]
+    
+    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    for Snake in snakes:    
         for body_part in Snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
