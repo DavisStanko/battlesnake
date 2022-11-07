@@ -28,11 +28,8 @@ def start(game_state: typing.Dict):
 def end(game_state: typing.Dict):
     print(Fore.GREEN + "GAME END" + Fore.RESET)
 
-# move is called on every turn and returns your next move
-# Valid moves are "up", "down", "left", or "right"
-# See https://docs.battlesnake.com/api/example-move for available data
 
-
+# move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
     # list of valid moves
     is_move_safe = {
@@ -106,7 +103,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # If no safe moves are left
     if len(safe_moves) == 0:
         print(f"{Back.RED}MOVE {game_state['turn']} No safe moves: Moving down{Back.RESET}")
-        return {"move": "down"}
+        return {"move": "down", "shout": "I'm gonna die!"}
 
     # If only one option is left
     if len(safe_moves) == 1:
@@ -225,7 +222,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 # die
                 next_move = 'down'
                 print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
-                return {"move": next_move}
+                return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If no food is left, move randomly
     else:
@@ -239,4 +236,4 @@ def move(game_state: typing.Dict) -> typing.Dict:
         except:
             next_move = 'down'
             print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
-            return {"move": next_move}
+            return {"move": next_move, "shout": "I'm gonna die!"}
