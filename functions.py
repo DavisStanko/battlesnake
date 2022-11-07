@@ -31,15 +31,6 @@ def end(game_state: typing.Dict):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
-    # initialize variables
-    next_move = ""
-    # print statements
-    panic_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}"
-    forced_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}"
-    kill_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}"
-    food_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}"
-    random_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}"
-
     # list of valid moves
     is_move_safe = {
         "up": True,
@@ -106,13 +97,13 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # If no safe moves are left
     if len(safe_moves) == 0:
         next_move = 'down'
-        print(panic_move)
+        print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
         return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If only one option is left
     if len(safe_moves) == 1:
         next_move = safe_moves[0]
-        print(forced_move)
+        print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
   # =================================================================================================
@@ -160,7 +151,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     break
                 if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
                     next_move = i
-                    print(kill_move)
+                    print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
                     return {"move": next_move}  # Try to kill the opponent
             if exit == True:
                 break
@@ -182,7 +173,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # If only one option is left
             if len(safe_moves) == 1:
                 next_move = safe_moves[0]
-                print(forced_move)
+                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
     # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
@@ -201,19 +192,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
     if closest_food is not None:
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
-            print(food_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif my_head['x'] > closest_food['x'] and is_move_safe['left']:
             next_move = 'left'
-            print(food_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif my_head['y'] < closest_food['y'] and is_move_safe['up']:
             next_move = 'up'
-            print(food_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif my_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-            print(food_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
 
         # If no safe moves go to the closest food then move randomly
@@ -222,13 +213,13 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # random safe move
             try:
                 next_move = random.choice(safe_moves)
-                print(random_move)
+                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
                 return {"move": next_move}
             # no safe moves left
             except:
                 # die
                 next_move = 'down'
-                print(panic_move)
+                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
                 return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If no food is left, move randomly
@@ -237,10 +228,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
         # random safe move
         try:
             next_move = random.choice(safe_moves)
-            print(random_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
             return {"move": next_move}
         # no safe moves left
         except:
             next_move = 'down'
-            print(panic_move)
+            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
             return {"move": next_move, "shout": "I'm gonna die!"}
