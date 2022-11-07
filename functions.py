@@ -60,19 +60,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print("Border above ")
 
     # ignore the tail of the snakes if they can't eat food
+    # we can tell that a snake just ate if it's tail is doubled up
     snakes = game_state['board']['snakes']
     for Snake in snakes:
-        for head in Snake['body'][0]:
-            # check for food in 4 directions
-            foods = game_state['board']['food']
-            for food in foods:
-                if head == food:
-                    print("Food found")
-                    # check if head is beside food
-                    if head[0] != food[0] - 1 and head[0] != food[0] + 1 and head[1] != food[1] - 1 and head[1] != food[1] + 1:
-                        print("Food not beside head")
-                        # remove tail
-                        del Snake['body'][-1]
+        # check if [-1] == [-2]
+        if Snake['body'][-1] != Snake['body'][-2]:
+            Snake['body'].remove(Snake['body'][-1])
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for Snake in snakes:
