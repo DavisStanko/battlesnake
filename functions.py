@@ -147,7 +147,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     exit = True
                     break
                 if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
-                    print(Fore.YELLOW + "attempt to kill" + Fore.RESET)
+                    print(f"{Fore.BLUE}MOVE {game_state['turn']} Attempt to kill: {i}{Fore.RESET}")
                     return {"move": i}  # Try to kill the opponent
             if exit == True:
                 break
@@ -214,7 +214,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             except:
                 # die
                 next_move = 'down'
-                print(Back.RED + "Error: No safe moves detected. Moving down." + Back.RESET)
+                print(f"{Fore.BLUE}MOVE {game_state['turn']}{Fore.RESET} {Back.RED}No safe moves left: {next_move}{Back.RESET}")
                 return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If no food is left, move randomly
