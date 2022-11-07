@@ -106,8 +106,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
-  # =================================================================================================
-
     # Check future moves
     for i in safe_moves:
         nextMoves = []
