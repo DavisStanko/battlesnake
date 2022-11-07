@@ -31,6 +31,8 @@ def end(game_state: typing.Dict):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
+    # initialize variables
+    next_move = ""
     # print statements
     panic_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}"
     forced_move = f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}"
@@ -49,10 +51,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # define the head of the snake
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
 
-    # don't move out of bounds
+    # get board dimensions
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
 
+    # don't move out of bounds
     if my_head['x'] == 0:
         is_move_safe['left'] = False
         print("Border left")
