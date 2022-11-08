@@ -2,12 +2,11 @@ import random
 import typing
 from colorama import Fore, Back
 
-# last standard tournament death stats
-# 1 space dead end 6 (one of these was created by eating food)
-# big dead end 6
-# even head on (because of tail code bug?) 5
-# lag 1
-# weird behavior 1
+# last 1v1 tournament death stats
+# one space dead end 3
+# forced dead end 5
+# 500+ms response time 2
+# big dead end 1
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
