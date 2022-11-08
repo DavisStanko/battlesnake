@@ -2,9 +2,8 @@ import random
 import typing
 from colorama import Fore, Back
 
+
 # info is called when you create your Battlesnake on play.battlesnake.com
-
-
 def info() -> typing.Dict:
     print("INFO")
 
@@ -65,8 +64,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
     snakes = game_state['board']['snakes']
     for Snake in snakes:
         # check if [-1] == [-2]
-        if Snake['body'][-1] != Snake['body'][-2]:
-            Snake['body'].remove(Snake['body'][-1])
+        if Snake['body'][-1] != Snake['body'][-2]:  # if the tail is not doubled up
+            Snake['body'].remove(Snake['body'][-1])  # ignore the tail
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for Snake in snakes:
