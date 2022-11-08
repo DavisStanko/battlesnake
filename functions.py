@@ -154,7 +154,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     temp_is_move_safe[i] = False  # Mark the move as potentially unsafe
                     exit = True
                     break
-                if opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
+                elif opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
                     next_move = i
                     print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
                     print(f"Opponent length = {len(oppponent['body'])} | My length = {len(game_state['you']['body'])}")
