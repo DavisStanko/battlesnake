@@ -2,6 +2,13 @@ import random
 import typing
 from colorama import Fore, Back
 
+# last standard tournament death stats
+# 1 space dead end 6 (one of these was created by eating food)
+# big dead end 6
+# even head on (because of tail code bug?) 5
+# lag 1
+# weird behavior 1
+
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
@@ -65,7 +72,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
     for Snake in snakes:
         # check if [-1] == [-2]
         if Snake['body'][-1] != Snake['body'][-2]:  # if the tail is not doubled up
-            Snake['body'].remove(Snake['body'][-1])  # ignore the tail
+            # set the tail coordinates to (-1, -1) so they don't affect our calculations but are still in the list for length calculations
+            Snake['body'][-1] = {'x': -1, 'y': -1}
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for Snake in snakes:
