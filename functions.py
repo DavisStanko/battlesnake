@@ -2,12 +2,6 @@ import random
 import typing
 from colorama import Fore, Back
 
-# last 1v1 tournament death stats
-# one space dead end 3
-# forced dead end 5
-# 500+ms response time 2
-# big dead end 1
-
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
@@ -51,6 +45,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
 
+    ############################
     # don't move out of bounds
     if my_head['x'] == 0:
         is_move_safe['left'] = False
@@ -65,6 +60,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         is_move_safe['up'] = False
         print("Border above ")
 
+    ############################
     # ignore the tail of the snakes if they can't eat food
     # we can tell that a snake just ate if it's tail is doubled up
     snakes = game_state['board']['snakes']
@@ -74,6 +70,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # set the tail coordinates to (-1, -1) so they don't affect our calculations but are still in the list for length calculations
             Snake['body'][-1] = {'x': -1, 'y': -1}
 
+    ############################
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for Snake in snakes:
         for body_part in Snake['body']:
@@ -112,6 +109,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
+    ############################
     # Check future moves
     for i in safe_moves:
         nextMoves = []
@@ -181,6 +179,46 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
+    ############################
+    # check if there are hazards on the board
+    temp_is_move_safe = is_move_safe.copy()
+
+    if len(game_state['board']['hazards']) > 0:
+        # avoid hazard sauce if possible
+        for i in game_state['board']['hazards']:
+            if i['x'] == my_head['x'] - 1 and i['y'] == my_head['y']:
+                temp_is_move_safe['left'] = False
+                print("Hazard left")
+            if i['x'] == my_head['x'] + 1 and i['y'] == my_head['y']:
+                temp_is_move_safe['right'] = False
+                print("Hazard right")
+            if i['y'] == my_head['y'] - 1 and i['x'] == my_head['x']:
+                temp_is_move_safe['down'] = False
+                print("Hazard below")
+            if i['y'] == my_head['y'] + 1 and i['x'] == my_head['x']:
+                temp_is_move_safe['up'] = False
+                print("Hazard above")
+
+            # if all moves enter a hazard, do nothing.
+            if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
+                print(f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
+
+            # get all moves that aren't onto hazards
+            else:
+                is_move_safe = temp_is_move_safe.copy()
+
+                safe_moves = []
+                for move, isSafe in is_move_safe.items():
+                    if isSafe:
+                        safe_moves.append(move)
+
+                # If only one option is left, go there
+                if len(safe_moves) == 1:
+                    next_move = safe_moves[0]
+                    print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
+                    return {"move": next_move}
+
+    ############################
     # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
     foods = game_state['board']['food']
 
@@ -227,6 +265,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
                 return {"move": next_move, "shout": "I'm gonna die!"}
 
+    ############################
     # If no food is left, move randomly
     else:
         print(f"{Fore.YELLOW}No food left{Fore.RESET}")
