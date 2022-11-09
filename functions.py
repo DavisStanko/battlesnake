@@ -180,10 +180,24 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 return {"move": next_move}
 
     ############################
+    # Calculate the distance to the closest food
+    foods = game_state['board']['food']
+
+    # Find the closest food
+    closest_food = None
+    closest_food_distance = 9999  # Start with an impossibly large number
+    for piece_of_food in foods:
+        distance = abs(my_head['x'] - piece_of_food['x']) + abs(my_head['y'] - piece_of_food['y'])
+        if distance < closest_food_distance:
+            closest_food = piece_of_food
+            closest_food_distance = distance
+
+    ############################
     # check if there are hazards on the board
     temp_is_move_safe = is_move_safe.copy()
 
-    if len(game_state['board']['hazards']) > 0:
+    # if there are hazards and food is not adjacent to the head
+    if len(game_state['board']['hazards']) > 0 and closest_food_distance != 1:
         # avoid hazard sauce if possible
         for i in game_state['board']['hazards']:
             if i['x'] == my_head['x'] - 1 and i['y'] == my_head['y']:
@@ -219,18 +233,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     return {"move": next_move}
 
     ############################
-    # If multiple safe moves are left, go in the direction of the food, to regain health and survive longer
-    foods = game_state['board']['food']
-
-    # Find the closest food
-    closest_food = None
-    closest_food_distance = 9999  # Start with an impossibly large number
-    for piece_of_food in foods:
-        distance = abs(my_head['x'] - piece_of_food['x']) + abs(my_head['y'] - piece_of_food['y'])
-        if distance < closest_food_distance:
-            closest_food = piece_of_food
-            closest_food_distance = distance
-
     # Move towards the closest food if it's safe
     if closest_food is not None:
         if my_head['x'] < closest_food['x'] and is_move_safe['right']:
