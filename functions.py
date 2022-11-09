@@ -110,6 +110,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         return {"move": next_move}
 
     ############################
+    # Head on collision avoidance
     # Check future moves
     for i in safe_moves:
         nextMoves = []
