@@ -184,7 +184,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # check if there are hazards on the board
     temp_is_move_safe = is_move_safe.copy()
 
-    # if there are hazards and food is not adjacent to the head
+    # if there are hazards
     if len(game_state['board']['hazards']) > 0:
         # avoid hazard sauce if possible
         for i in game_state['board']['hazards']:
@@ -222,7 +222,13 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     ############################
     # Calculate the distance to the closest food
+    # Get the coordinates for each food
     foods = game_state['board']['food']
+
+    # Remove the food if it's in a hazard
+    for food in foods:
+        if food in game_state['board']['hazards']:
+            foods.remove(food)
 
     # Find the closest food
     closest_food = None
