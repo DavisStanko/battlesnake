@@ -19,6 +19,9 @@ def info() -> typing.Dict:
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
     print(Fore.GREEN + "GAME START")
+    # get gamewmode
+    game_mode = game_state["game"]["ruleset"]["name"]
+    print("Game Mode: " + game_mode)
     # print game id to watch game later
     print(game_state["game"]["id"] + Fore.RESET)
 
