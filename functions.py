@@ -3,6 +3,7 @@ import typing
 from colorama import Fore, Back
 
 global wrap
+wrap = False
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
