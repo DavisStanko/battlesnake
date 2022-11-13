@@ -8,28 +8,29 @@ Battlesnake is a multiplayer snake game where your snake is controlled by code. 
 
 The snake currently does the following when prompted to move:
 
-1. Decides against moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
+1. Avoids moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
     - If there are no safe moves it moves down (helps to differentiate between purposeful move and error since errors make the snake move up).
     - If there is one safe move it moves there.
-    - If there are multiple safe moves, it continues its' calculations.
     - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
+    - If the game mode supports wall wrapping, the border is considered safe.
 2. Avoids possible head on collisions with bigger or equally sized snakes.
-    - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
+    - Head on collisions are not covered by step one as all snakes move at once. Therefore it's necessary to look into where the opposing snakes heads *could* end up and avoid that if collision would kill us.
 3. Avoids hazard sauce if possible.
+    - Hazard sauce causes snakes to lose 16hp instead of the normal 1hp per turn.
 4. Attempts possible head on collisions with smaller snakes.
     - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
-5. Finds the closest apple
-6. Moves towards the closest apple.
+5. Find the closest apple and move towards it.
+    - Apples reset hp to 100 and extend the snakes length by 1 tile.
 
 ## Next Steps
 
 ### Important
 
-1. Deal with wrap enabled game modes
-    - As it stands, the snake avoids the border at all costs including in game modes with wrap enabled.
+1. Pathfinding in wrap enabled game modes
+    - As it stands, the snake does not consider potential shortcuts that involve wrapping through the wall when heading for apples.
 
 2. Don't move into dead ends.
-    - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
+    - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes choosing moves that lead to immanent (but not immediate) death.
 
 3. Choose best option when attempting to kill a snake via head on collision.
     - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will just pick the first instead of the best.
