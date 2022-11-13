@@ -29,11 +29,11 @@ def start(game_state: typing.Dict):
 
     # check if game mode has wrap
     if game_mode == "wrapped" or game_mode == "spicy-meteors":
-        wrap == True
+        wrap = True
         print("Wrap enabled")
     else:
         print("Wrap disabled")
-        wrap == False
+        wrap = False
 
     # print game id to watch game later
     print(game_state["game"]["id"] + Fore.RESET)
