@@ -2,6 +2,7 @@ import random
 import typing
 from colorama import Fore, Back
 
+global wrap
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 def info() -> typing.Dict:
@@ -19,9 +20,17 @@ def info() -> typing.Dict:
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
     print(Fore.GREEN + "GAME START")
-    # get gamewmode
+    # get gamemode
     game_mode = game_state["game"]["ruleset"]["name"]
     print("Game Mode: " + game_mode)
+
+    # check if game mode has wrap
+    if game_mode == "wrapped" or game_mode == "spicy-meteors":
+        wrap == True
+        print("Wrap enabled")
+    else:
+        wrap == False
+
     # print game id to watch game later
     print(game_state["game"]["id"] + Fore.RESET)
 
@@ -49,19 +58,21 @@ def move(game_state: typing.Dict) -> typing.Dict:
     board_height = game_state['board']['height']
 
     ############################
-    # don't move out of bounds
-    if my_head['x'] == 0:
-        is_move_safe['left'] = False
-        print("Border left")
-    if my_head['x'] == board_width - 1:
-        is_move_safe['right'] = False
-        print("Border right")
-    if my_head['y'] == 0:
-        is_move_safe['down'] = False
-        print("Border below ")
-    if my_head['y'] == board_height - 1:
-        is_move_safe['up'] = False
-        print("Border above ")
+    # Avoid borders if wrap is not enabled
+    if wrap == False:
+        # don't move out of bounds
+        if my_head['x'] == 0:
+            is_move_safe['left'] = False
+            print("Border left")
+        if my_head['x'] == board_width - 1:
+            is_move_safe['right'] = False
+            print("Border right")
+        if my_head['y'] == 0:
+            is_move_safe['down'] = False
+            print("Border below ")
+        if my_head['y'] == board_height - 1:
+            is_move_safe['up'] = False
+            print("Border above ")
 
     ############################
     # ignore the tail of the snakes if they can't eat food
