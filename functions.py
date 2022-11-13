@@ -19,6 +19,7 @@ def info() -> typing.Dict:
 
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
+    global wrap
     print(Fore.GREEN + "GAME START")
     # get gamemode
     game_mode = game_state["game"]["ruleset"]["name"]
@@ -43,6 +44,7 @@ def end(game_state: typing.Dict):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
+    global wrap
     # list of valid moves
     is_move_safe = {
         "up": True,
