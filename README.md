@@ -15,18 +15,18 @@ The snake currently does the following when prompted to move:
     - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
 2. Avoids possible head on collisions with bigger or equally sized snakes.
     - Head on collisions are not covered by step one as all snakes move at once. Therefore we need to look into where the opposing snakes head *could* end up and avoid that if collision would kill us.
-3. Attempts possible head on collisions with smaller snakes.
+3. Avoids hazard sauce if possible.
+4. Attempts possible head on collisions with smaller snakes.
     - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
-4. Finds the closest apple
-5. Moves towards the closest apple.
+5. Finds the closest apple
+6. Moves towards the closest apple.
 
 ## Next Steps
 
 ### Important
 
-1. Deal with multiple "safe" moves where the only choices are possible deadly head on collisions.
-    - **Theoretically this has been fixed but it has yet to be tested in a real game as this situation is rare.**
-    - In the event where there are multiple moves that aren't guaranteed death, the snake attempts to find the best move. In doing so, it removes moves that could result in deadly head on collisions. However, it is possible that there are no safe moves left. In this case, the snake just moves down. This is not a good solution and needs to be fixed.
+1. Deal with wrap enabled game modes
+    - As it stands, the snake avoids the border at all costs including in game modes with wrap enabled.
 
 2. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes chose moves that lead to immanent (but not immediate) death.
@@ -36,8 +36,8 @@ The snake currently does the following when prompted to move:
 
 ### Things to consider
 
-1. Deal with hazard sauce.
-    - Battlesnake has multiple game modes. Currently, my snake was developed only for the standard mode. However, it would be interesting to adapt to modes with more variables such as hazard sauce.
+1. Deal with hazard sauce better.
+    - Currently the snake will avoid hazard sauce at all costs regardless of whether or not there is an incentive to enter. Furthermore, it can't find it's way out easily once deep inside the sauce.
 
 2. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
