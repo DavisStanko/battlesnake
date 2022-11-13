@@ -13,12 +13,16 @@ The snake currently does the following when prompted to move:
     - If there is one safe move it moves there.
     - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
     - If the game mode supports wall wrapping, the border is considered safe.
+
 2. Avoids possible head on collisions with bigger or equally sized snakes.
     - Head on collisions are not covered by step one as all snakes move at once. Therefore it's necessary to look into where the opposing snakes heads *could* end up and avoid that if collision would kill us.
+
 3. Avoids hazard sauce if possible.
     - Hazard sauce causes snakes to lose 16hp instead of the normal 1hp per turn.
+
 4. Attempts possible head on collisions with smaller snakes.
     - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
+
 5. Find the closest apple and move towards it.
     - Apples reset hp to 100 and extend the snakes length by 1 tile.
 
