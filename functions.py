@@ -2,6 +2,7 @@ import random
 import typing
 from colorama import Fore, Back
 
+# initialize global variables
 global wrap
 wrap = False
 
