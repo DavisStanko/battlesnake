@@ -29,6 +29,7 @@ def start(game_state: typing.Dict):
         wrap == True
         print("Wrap enabled")
     else:
+        print("Wrap disabled")
         wrap == False
 
     # print game id to watch game later
