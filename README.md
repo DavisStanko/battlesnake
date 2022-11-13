@@ -24,26 +24,22 @@ The snake currently does the following when prompted to move:
 
 ## Next Steps
 
-### Important
-
-1. Pathfinding in wrap enabled game modes
-    - As it stands, the snake does not consider potential shortcuts that involve wrapping through the wall when heading for apples.
-
-2. Don't move into dead ends.
+1. Don't move into dead ends.
     - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes choosing moves that lead to immanent (but not immediate) death.
 
-3. Choose best option when attempting to kill a snake via head on collision.
+2. Choose best option when attempting to kill a snake via head on collision.
     - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will just pick the first instead of the best.
 
-### Things to consider
+3. Pathfinding in wrap enabled game modes
+    - As it stands, the snake does not consider potential shortcuts that involve wrapping through the wall when heading for apples.
 
-1. Deal with hazard sauce better.
+4. Deal with hazard sauce better.
     - Currently the snake will avoid hazard sauce at all costs regardless of whether or not there is an incentive to enter. Furthermore, it can't find it's way out easily once deep inside the sauce.
 
-2. Purposefully kill other snakes?
+5. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
 
-3. Change snake philosophy.
+6. Change snake philosophy.
     - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
 
 ## License
