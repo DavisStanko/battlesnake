@@ -9,7 +9,7 @@ Battlesnake is a multiplayer snake game where your snake is controlled by code. 
 The snake currently does the following when prompted to move:
 
 1. Avoids moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
-    - If there are no safe moves it moves down (helps to differentiate between purposeful move and error since errors make the snake move up).
+    - If there are no safe moves it moves down (helps to differentiate between purposeful moves and errors since errors make the snake move up).
     - If there is one safe move it moves there.
     - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
     - If the game mode supports wall wrapping, the border is considered safe.
