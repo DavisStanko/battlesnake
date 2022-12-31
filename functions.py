@@ -7,6 +7,8 @@ global wrap
 wrap = False
 
 # info is called when you create your Battlesnake on play.battlesnake.com
+
+
 def info() -> typing.Dict:
     print("INFO")
 
@@ -80,14 +82,16 @@ def move(game_state: typing.Dict) -> typing.Dict:
             print("Border above ")
 
     ############################
-    # ignore the tail of the snakes if they can't eat food
-    # we can tell that a snake just ate if it's tail is doubled up
-    snakes = game_state['board']['snakes']
-    for Snake in snakes:
-        # check if [-1] == [-2]
-        if Snake['body'][-1] != Snake['body'][-2]:  # if the tail is not doubled up
-            # set the tail coordinates to (-1, -1) so they don't affect our calculations but are still in the list for length calculations
-            Snake['body'][-1] = {'x': -1, 'y': -1}
+    # ignore the tail of the snakes if they can't eat food and aren't playing the constrictor game mode
+    # check for constrictor game mode
+    if game_state["game"]["ruleset"]["name"] != "constrictor" and game_state["game"]["ruleset"]["name"] != "wrapped-constrictor":
+        # we can tell that a snake just ate if it's tail is doubled up
+        snakes = game_state['board']['snakes']
+        for Snake in snakes:
+            # check if [-1] == [-2]
+            if Snake['body'][-1] != Snake['body'][-2]:  # if the tail is not doubled up
+                # set the tail coordinates to (-1, -1) so they don't affect our calculations but are still in the list for length calculations
+                Snake['body'][-1] = {'x': -1, 'y': -1}
 
     ############################
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
