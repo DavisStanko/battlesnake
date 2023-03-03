@@ -36,6 +36,7 @@ The snake currently does the following when prompted to move:
 
 3. Pathfinding in wrap enabled game modes
     - As it stands, the snake does not consider potential shortcuts that involve wrapping through the wall when heading for apples.
+    - Furthermore, the snake does not check to see if wrapping through the wall is safe, treating it only as a last resort.
 
 4. Deal with hazard sauce better.
     - Currently the snake will avoid hazard sauce at all costs regardless of whether or not there is an incentive to enter. Furthermore, it can't find it's way out easily once deep inside the sauce.
