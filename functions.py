@@ -1,14 +1,15 @@
+# imports
 import random
 import typing
 from colorama import Fore, Back
 
-# initialize global variables
-global wrap
+# initialize variables
 wrap = False
+board_width = 0
+board_height = 0
+
 
 # info is called when you create your Battlesnake on play.battlesnake.com
-
-
 def info() -> typing.Dict:
     print("INFO")
 
@@ -24,10 +25,14 @@ def info() -> typing.Dict:
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
     global wrap
+    global board_width
+    global board_height
+
     print(Fore.GREEN + "GAME START")
+
     # get gamemode
     game_mode = game_state["game"]["ruleset"]["name"]
-    print("Game Mode: " + game_mode)
+    print(f"Game Mode: {game_mode}")
 
     # check if game mode has wrap
     if game_mode == "wrapped" or game_mode == "wrapped-constrictor" or game_mode == "spicy-meteors":
@@ -36,6 +41,11 @@ def start(game_state: typing.Dict):
     else:
         print("Wrap disabled")
         wrap = False
+        
+    # get the board's dimensions
+    board_width = game_state['board']['width']
+    board_height = game_state['board']['height']
+    print(f"Board dimensions: {board_width}x{board_height}")
 
     # print game id to watch game later
     print(game_state["game"]["id"] + Fore.RESET)
@@ -49,7 +59,10 @@ def end(game_state: typing.Dict):
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
     global wrap
-    # list of valid moves
+    global board_width
+    global board_height
+
+    # reset list of valid moves
     is_move_safe = {
         "up": True,
         "down": True,
@@ -57,12 +70,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
         "right": True
     }
 
-    # define the head of the snake
+    # locate the head of the snake
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
-
-    # get board dimensions
-    board_width = game_state['board']['width']
-    board_height = game_state['board']['height']
 
     ############################
     # Avoid borders if wrap is not enabled
