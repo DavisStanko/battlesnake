@@ -41,7 +41,7 @@ def start(game_state: typing.Dict):
     else:
         print("Wrap disabled")
         wrap = False
-        
+
     # get the board's dimensions
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
