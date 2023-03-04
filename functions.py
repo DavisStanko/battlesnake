@@ -3,10 +3,22 @@ import random
 import typing
 from colorama import Fore, Back
 
-# initialize variables
-wrap = False
-board_width = 0
-board_height = 0
+
+class Game:
+    def __init__(self, game_id, board_width, board_height, game_mode, wrap):
+        self.game_id = game_id
+        self.board_width = board_width
+        self.board_height = board_height
+        self.game_mode = game_mode
+        self.wrap = wrap
+
+        # print game info
+        print(Fore.RESET + Back.RESET)  # reset color
+        print(f"Game ID: {game_id}")
+        print(f"Board Width: {board_width}")
+        print(f"Board Height: {board_height}")
+        print(f"Game Mode: {game_mode}")
+        print(f"Wrap: {wrap}")
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -24,16 +36,15 @@ def info() -> typing.Dict:
 
 # start is called when your Battlesnake begins a game
 def start(game_state: typing.Dict):
-    global wrap
-    global board_width
-    global board_height
-
     print(Fore.GREEN + "GAME START")
 
-    # get gamemode
-    game_mode = game_state["game"]["ruleset"]["name"]
-    print(f"Game Mode: {game_mode}")
+    # create game class
+    game_id = game_state["game"]["id"]
 
+    board_width = game_state['board']['width']
+    board_height = game_state['board']['height']
+
+    game_mode = game_state["game"]["ruleset"]["name"]
     # check if game mode has wrap
     if game_mode == "wrapped" or game_mode == "wrapped-constrictor" or game_mode == "spicy-meteors":
         wrap = True
@@ -42,13 +53,7 @@ def start(game_state: typing.Dict):
         print("Wrap disabled")
         wrap = False
 
-    # get the board's dimensions
-    board_width = game_state['board']['width']
-    board_height = game_state['board']['height']
-    print(f"Board dimensions: {board_width}x{board_height}")
-
-    # print game id to watch game later
-    print(game_state["game"]["id"] + Fore.RESET)
+    Game = Game(game_id, board_width, board_height, game_mode, wrap)
 
 
 # end is called when your Battlesnake finishes a game
@@ -58,9 +63,10 @@ def end(game_state: typing.Dict):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
-    global wrap
-    global board_width
-    global board_height
+    # get wrap and board size from game class
+    wrap = Game.wrap
+    board_width = Game.board_width
+    board_height = Game.board_height
 
     # reset list of valid moves
     is_move_safe = {
