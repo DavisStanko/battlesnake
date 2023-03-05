@@ -105,6 +105,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # locate the head of the snake
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
 
+    # define snakes
+    snakes = game_state['board']['snakes']
+
     ###############################
     ### AVOID BORDER COLLISIONS ###
     ###############################
@@ -124,11 +127,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
             is_move_safe['up'] = False
             print("Border above ")
 
-    ############################
-    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
-    snakes = game_state['board']['snakes']
+    #############################
+    ### AVOID SNAKE COLLISION ###
+    #############################
+
+    # Check if the tail is going to move out of the way
     for Snake in snakes:
-        # Check if the tail is going to move out of the way
         # Check for constrictor game mode
         if constrictor == False:
             # Check if the snake just ate food
@@ -136,10 +140,14 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 # Move the tail coordinates so they don't affect our calculations but are still in the list for length calculations
                 Snake['body'][-1] = {'x': -1, 'y': -1}
 
-        # Check to see if the snake is going to collide with itself or another snake
+    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    for Snake in snakes:
         for body_part in Snake['body']:
+            # Check if body part was moved out of the way
+            if body_part['x'] == -1 and body_part['y'] == -1:
+                continue
             # Check if body part is to the left of head
-            if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
+            elif body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
                 is_move_safe['left'] = False
                 print("Snake left")
             # Check if body part is to the right of head
@@ -173,9 +181,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
-    ###########################
-    ## NON-URGENT GAME LOGIC ##
-    ###########################
+    ###############################
+    ### HEAD ON COLLISION LOGIC ###
+    ###############################
 
     # Head on collision avoidance
     # Check future moves
@@ -214,16 +222,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
         for x in future_moves:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
+
                 if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
                     print(f"{Fore.YELLOW}Possible head on collision with {oppponent['id']}{Fore.RESET}")
                     temp_is_move_safe[i] = False  # Mark the move as potentially unsafe
                     exit = True
                     break
+
                 elif opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
                     next_move = i
                     print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
                     print(f"Opponent length = {len(oppponent['body'])} | My length = {len(game_state['you']['body'])}")
                     return {"move": next_move}  # Try to kill the opponent
+
             if exit == True:
                 break
 
@@ -247,10 +258,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
-    # check if there are hazards on the board
     temp_is_move_safe = is_move_safe.copy()
 
-    # if there are hazards
+    # check if there are hazards on the board
     if len(game_state['board']['hazards']) > 0:
         # avoid hazard sauce if possible
         for i in game_state['board']['hazards']:
@@ -286,9 +296,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                     return {"move": next_move}
 
-    ###########################
-    ##### FOOD GAME LOGIC #####
-    ###########################
+    #######################
+    ### FOOD GAME LOGIC ###
+    #######################
 
     # Get the coordinates for each food
     foods = game_state['board']['food']
