@@ -13,7 +13,7 @@ class Game:
         self.game_mode = game_mode
         self.wrap = wrap
         self.constrictor = constrictor
- 
+
     # getters
     def get_board_width(self):
         return self.board_width
@@ -23,10 +23,10 @@ class Game:
 
     def get_wrap(self):
         return self.wrap
-    
+
     def get_constrictor(self):
         return self.constrictor
-        
+
     # print game info
     def print_info(self):
         # print game info
@@ -63,13 +63,13 @@ def start(game_state: typing.Dict):
     board_height = game_state['board']['height']
 
     game_mode = game_state["game"]["ruleset"]["name"]
-    
+
     # check if game mode has wrap
     if game_mode == "wrapped" or game_mode == "wrapped-constrictor" or game_mode == "spicy-meteors":
         wrap = True
     else:
         wrap = False
-    
+
     # check if game mode is constrictor
     if game_state["game"]["ruleset"]["name"] == "constrictor" or game_state["game"]["ruleset"]["name"] == "wrapped-constrictor":
         constrictor = True
@@ -105,10 +105,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # locate the head of the snake
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
 
-    ############################
-    #### URGENT GAME LOGIC #####
-    ############################
-    
+    ###############################
+    ### AVOID BORDER COLLISIONS ###
+    ###############################
+
     # Avoid borders if wrap is not enabled
     if wrap == False:
         if my_head['x'] == 0:
@@ -125,35 +125,33 @@ def move(game_state: typing.Dict) -> typing.Dict:
             print("Border above ")
 
     ############################
-    # Mark tails as safe constrictor is enabled and the snake hasn't eaten
-    # check for constrictor game mode
-    if constrictor == False:
-        # check if the snake has eaten
-        snakes = game_state['board']['snakes']
-        for Snake in snakes:
-            # A snake's tail is doubled up if it just ate
-            if Snake['body'][-1] != Snake['body'][-2]: 
+    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    snakes = game_state['board']['snakes']
+    for Snake in snakes:
+        # Check if the tail is going to move out of the way
+        # Check for constrictor game mode
+        if constrictor == False:
+            # Check if the snake just ate food
+            if Snake['body'][-1] != Snake['body'][-2]:  # Tail doubled up
                 # Move the tail coordinates so they don't affect our calculations but are still in the list for length calculations
                 Snake['body'][-1] = {'x': -1, 'y': -1}
 
-    ############################
-    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
-    for Snake in snakes:
+        # Check to see if the snake is going to collide with itself or another snake
         for body_part in Snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == my_head['x'] - 1 and body_part['y'] == my_head['y']:
                 is_move_safe['left'] = False
                 print("Snake left")
             # Check if body part is to the right of head
-            if body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
+            elif body_part['x'] == my_head['x'] + 1 and body_part['y'] == my_head['y']:
                 is_move_safe['right'] = False
                 print("Snake right")
             # Check if body part is below head
-            if body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
+            elif body_part['y'] == my_head['y'] - 1 and body_part['x'] == my_head['x']:
                 is_move_safe['down'] = False
                 print("Snake below")
             # Check if body part is above head
-            if body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
+            elif body_part['y'] == my_head['y'] + 1 and body_part['x'] == my_head['x']:
                 is_move_safe['up'] = False
                 print("Snake above")
 
@@ -175,7 +173,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
-    ############################
+    ###########################
+    ## NON-URGENT GAME LOGIC ##
+    ###########################
+
     # Head on collision avoidance
     # Check future moves
     for i in safe_moves:
@@ -246,7 +247,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
-    ############################
     # check if there are hazards on the board
     temp_is_move_safe = is_move_safe.copy()
 
@@ -286,8 +286,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                     return {"move": next_move}
 
-    ############################
-    # Calculate the distance to the closest food
+    ###########################
+    ##### FOOD GAME LOGIC #####
+    ###########################
+
     # Get the coordinates for each food
     foods = game_state['board']['food']
 
