@@ -1,4 +1,3 @@
-# imports
 import random
 import typing
 from colorama import Fore, Back
