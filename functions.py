@@ -137,8 +137,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
         if constrictor == False:
             # Check if the snake just ate food
             if Snake['body'][-1] != Snake['body'][-2]:  # Tail doubled up
-                # Move the tail coordinates so they don't affect our calculations but are still in the list for length calculations
-                Snake['body'][-1] = {'x': -1, 'y': -1}
+                # Remove the tail from the list of snakes
+                Snake['body'].pop()
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for Snake in snakes:
@@ -223,16 +223,16 @@ def move(game_state: typing.Dict) -> typing.Dict:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
 
-                if opponentHead == x and len(oppponent["body"]) >= len(game_state["you"]["body"]):  # If the opponent is bigger than me
+                if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:  # If the opponent is bigger than me
                     print(f"{Fore.YELLOW}Possible head on collision with {oppponent['id']}{Fore.RESET}")
                     temp_is_move_safe[i] = False  # Mark the move as potentially unsafe
                     exit = True
                     break
 
-                elif opponentHead == x and len(oppponent["body"]) < len(game_state["you"]["body"]):  # If the opponent is smaller than me
+                elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:  # If the opponent is smaller than me
                     next_move = i
                     print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
-                    print(f"Opponent length = {len(oppponent['body'])} | My length = {len(game_state['you']['body'])}")
+                    print(f"Opponent length = {oppponent['length']} | My length = {game_state['you']['length']}")
                     return {"move": next_move}  # Try to kill the opponent
 
             if exit == True:
