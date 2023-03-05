@@ -260,6 +260,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     temp_is_move_safe = is_move_safe.copy()
 
+    ##############################
+    ### HAZARD AVOIDANCE LOGIC ###
+    ##############################
+
     # check if there are hazards on the board
     if len(game_state['board']['hazards']) > 0:
         # avoid hazard sauce if possible
