@@ -50,5 +50,4 @@ The snake currently does the following when prompted to move:
 ## License
 
 This project is licensed under the [GPL-3.0](LICENSE.md)
-GNU General Public License - see the [LICENSE.md](LICENSE.md) file for
-details.
+GNU General Public License - see the [LICENSE.md](LICENSE.md) file for details.

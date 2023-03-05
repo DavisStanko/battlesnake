@@ -4,6 +4,7 @@ import typing
 from colorama import Fore, Back
 
 
+# store game info in a class
 class Game:
     def __init__(self, game_id, board_width, board_height, game_mode, wrap, constrictor):
         self.game_id = game_id
@@ -105,9 +106,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
     my_head = game_state["you"]["body"][0]  # Coordinates of your head
 
     ############################
+    #### URGENT GAME LOGIC #####
+    ############################
+    
     # Avoid borders if wrap is not enabled
     if wrap == False:
-        # don't move out of bounds
         if my_head['x'] == 0:
             is_move_safe['left'] = False
             print("Border left")
@@ -122,15 +125,15 @@ def move(game_state: typing.Dict) -> typing.Dict:
             print("Border above ")
 
     ############################
-    # ignore the tail of the snakes if they can't eat food and aren't playing the constrictor game mode
+    # Mark tails as safe constrictor is enabled and the snake hasn't eaten
     # check for constrictor game mode
     if constrictor == False:
-        # we can tell that a snake just ate if it's tail is doubled up
+        # check if the snake has eaten
         snakes = game_state['board']['snakes']
         for Snake in snakes:
-            # check if [-1] == [-2]
-            if Snake['body'][-1] != Snake['body'][-2]:  # if the tail is not doubled up
-                # set the tail coordinates to (-1, -1) so they don't affect our calculations but are still in the list for length calculations
+            # A snake's tail is doubled up if it just ate
+            if Snake['body'][-1] != Snake['body'][-2]: 
+                # Move the tail coordinates so they don't affect our calculations but are still in the list for length calculations
                 Snake['body'][-1] = {'x': -1, 'y': -1}
 
     ############################
