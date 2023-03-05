@@ -5,20 +5,37 @@ from colorama import Fore, Back
 
 
 class Game:
-    def __init__(self, game_id, board_width, board_height, game_mode, wrap):
+    def __init__(self, game_id, board_width, board_height, game_mode, wrap, constrictor):
         self.game_id = game_id
         self.board_width = board_width
         self.board_height = board_height
         self.game_mode = game_mode
         self.wrap = wrap
+        self.constrictor = constrictor
+ 
+    # getters
+    def get_board_width(self):
+        return self.board_width
 
+    def get_board_height(self):
+        return self.board_height
+
+    def get_wrap(self):
+        return self.wrap
+    
+    def get_constrictor(self):
+        return self.constrictor
+        
+    # print game info
+    def print_info(self):
         # print game info
         print(Fore.RESET + Back.RESET)  # reset color
-        print(f"Game ID: {game_id}")
-        print(f"Board Width: {board_width}")
-        print(f"Board Height: {board_height}")
-        print(f"Game Mode: {game_mode}")
-        print(f"Wrap: {wrap}")
+        print(f"Game ID: {self.game_id}")
+        print(f"Board Width: {self.board_width}")
+        print(f"Board Height: {self.board_height}")
+        print(f"Game Mode: {self.game_mode}")
+        print(f"Wrap: {self.wrap}")
+        print(f"Constrictor: {self.constrictor}")
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -45,15 +62,22 @@ def start(game_state: typing.Dict):
     board_height = game_state['board']['height']
 
     game_mode = game_state["game"]["ruleset"]["name"]
+    
     # check if game mode has wrap
     if game_mode == "wrapped" or game_mode == "wrapped-constrictor" or game_mode == "spicy-meteors":
         wrap = True
-        print("Wrap enabled")
     else:
-        print("Wrap disabled")
         wrap = False
+    
+    # check if game mode is constrictor
+    if game_state["game"]["ruleset"]["name"] == "constrictor" or game_state["game"]["ruleset"]["name"] == "wrapped-constrictor":
+        constrictor = True
+    else:
+        constrictor = False
 
-    Game = Game(game_id, board_width, board_height, game_mode, wrap)
+    global Current_game
+    Current_game = Game(game_id, board_width, board_height, game_mode, wrap, constrictor)
+    Current_game.print_info()
 
 
 # end is called when your Battlesnake finishes a game
@@ -63,10 +87,11 @@ def end(game_state: typing.Dict):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
-    # get wrap and board size from game class
-    wrap = Game.wrap
-    board_width = Game.board_width
-    board_height = Game.board_height
+    # get info from game class' getters
+    board_width = Current_game.get_board_width()
+    board_height = Current_game.get_board_height()
+    wrap = Current_game.get_wrap()
+    constrictor = Current_game.get_constrictor()
 
     # reset list of valid moves
     is_move_safe = {
@@ -99,7 +124,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     ############################
     # ignore the tail of the snakes if they can't eat food and aren't playing the constrictor game mode
     # check for constrictor game mode
-    if game_state["game"]["ruleset"]["name"] != "constrictor" and game_state["game"]["ruleset"]["name"] != "wrapped-constrictor":
+    if constrictor == False:
         # we can tell that a snake just ate if it's tail is doubled up
         snakes = game_state['board']['snakes']
         for Snake in snakes:
