@@ -128,6 +128,9 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
             elif {'x': player_head['x'], 'y': player_head['y'] + 1} in body_part.values():
                 moves['up'] = (moves['up'][0], 4)
 
+    print(f"{Fore.RED}Avoid Snakes{Style.RESET_ALL}")
+    print(f"{moves}")
+
     # Clean move list
     moves = clean_move_list(moves)
 
