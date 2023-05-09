@@ -1,5 +1,5 @@
 import typing
-from colorama import Fore, Back
+from colorama import Fore, Back, Style
 
 
 # Stores game info
@@ -39,9 +39,6 @@ def info() -> typing.Dict:
 
 # Start of game
 def start(game_state: typing.Dict):
-    # Print start message
-    print(Fore.GREEN + "START")
-
     # create game class
     game_id = game_state["game"]["id"]
 
@@ -60,11 +57,15 @@ def start(game_state: typing.Dict):
     global Current_game
     Current_game = Game(game_id, board_width, board_height,
                         game_mode, wrap, constrictor)
+    
+    # Print start message
+    print(f"{Back.BLUE}Game START{Style.RESET_ALL}")
+    print(f"{Current_game}")
 
 
 # end is called when your Battlesnake finishes a game
 def end(game_state: typing.Dict):
-    pass
+    print(f"{Back.BLUE}Game END{Style.RESET_ALL}")
 
 
 def clean_move_list(moves):
@@ -73,6 +74,8 @@ def clean_move_list(moves):
     for move in list(moves):
         if moves[move] > min_danger:
             moves.remove(move)
+    # Return the updated moves list
+    return moves
 
 
 def avoid_borders(player_head, board_width, board_height, moves):
@@ -274,6 +277,9 @@ def aim_for_food(game_state, player_head, moves):
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
+    # Print turn
+    print(f"{Back.BLUE}Turn {game_state['turn']}{Style.RESET_ALL}")
+    
     # get info from game class' getters
     board_width = Current_game.get_board_width()
     board_height = Current_game.get_board_height()
@@ -285,7 +291,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     moves = [("up", 0, 0), ("down", 0, 0), ("left", 0, 0), ("right", 0, 0)]
 
     # locate the head of the snake
-    player_head = game_state["you"]["body"][0]  # Coordinates of your head
+    player_head = game_state["you"]["body"][0]
 
     # get player health
     player_health = game_state["you"]["health"]
@@ -296,21 +302,28 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # Avoid borders if wrap is not enabled
     if wrap is False:
         moves = avoid_borders(player_head, board_width, board_height, moves)
+        print(f"Moves after avoid_borders: {moves}")
 
     # Avoid snakes
     moves = avoid_snakes(player_head, moves, snakes, constrictor)
+    print(f"Moves after avoid_snakes: {moves}")
 
     # Head on collision logic
     moves = head_on_collision(game_state, player_head, moves)
+    print(f"Moves after head_on_collision: {moves}")
 
     # Avoid hazards
     moves = avoid_hazards(game_state, player_head, moves, player_health)
+    print(f"Moves after avoid_hazards: {moves}")
 
     # Aim for food
     moves = aim_for_food(game_state, player_head, moves)
+    print(f"Moves after aim_for_food: {moves}")
 
     # Get move with highest desire
     best_move = max(moves, key=lambda x: x[2])
+    print(f"Best move: {best_move}")
 
     # Move
+    print(f"Move: {best_move[0]}")
     return {"move": best_move[0]}
