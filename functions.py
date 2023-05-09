@@ -1,5 +1,6 @@
 import typing
 
+
 # Stores game info
 class Game:
     def __init__(self, game_id, board_width, board_height, game_mode, wrap, constrictor):
