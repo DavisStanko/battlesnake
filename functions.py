@@ -24,6 +24,14 @@ class Game:
 
     def get_constrictor(self):
         return self.constrictor
+    
+    def print_info(self):
+        print(f"Game ID: {self.game_id}")
+        print(f"Board Width: {self.board_width}")
+        print(f"Board Height: {self.board_height}")
+        print(f"Game Mode: {self.game_mode}")
+        print(f"Wrap: {self.wrap}")
+        print(f"Constrictor: {self.constrictor}")
 
 
 # Battlesnake metadata (Name, Author, Color, Head, Tail)
@@ -60,7 +68,7 @@ def start(game_state: typing.Dict):
 
     # Print start message
     print(f"{Back.BLUE}Game START{Style.RESET_ALL}")
-    print(f"{Current_game}")
+    Current_game.print_info()
 
 
 # end is called when your Battlesnake finishes a game
@@ -171,14 +179,14 @@ def head_on_collision(game_state, player_head, moves):
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
                     # Danger 2
-                    move[x] = (move[x][0], 2)
+                    move[str(x)] = (move[str(x)][0], 2)
                     break
 
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     # Desire 3
-                    move[x] = (move[x][1], 3)
+                    move[str(x)] = (move[str(x)][1], 3)
 
     # Clean move list
     moves = clean_move_list(moves)
