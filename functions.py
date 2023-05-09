@@ -112,11 +112,8 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
     # Danger 4
     for snake in snakes:
         for body_part in snake['body']:
-            # Check if body part was moved out of the way
-            if {'x': -1, 'y': -1} in body_part:
-                continue
             # Check if body part is to the left of head
-            elif body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
+            if body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
                 moves['left'] = (moves['left'][0], 4)
             # Check if body part is to the right of head
             elif body_part['x'] == player_head['x'] + 1 and body_part['y'] == player_head['y']:
