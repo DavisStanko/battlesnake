@@ -326,5 +326,4 @@ def move(game_state: typing.Dict) -> typing.Dict:
     print(f"Best move: {best_move}")
 
     # Move
-    print(f"Move: {best_move[0]}")
-    return {"move": best_move[0]}
+    return {"move": best_move}
