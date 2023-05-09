@@ -185,7 +185,7 @@ def head_on_collision(game_state, player_head, moves):
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     # Desire +3
-                    moves[direction] = (moves[direction][0], moves[direction][1]+3)   
+                    moves[direction] = (moves[direction][0], moves[direction][1] + 3)
 
     # Clean move list
     moves = clean_move_list(moves)
@@ -268,12 +268,33 @@ def aim_for_food(game_state, player_head, moves):
     if closest_food is not None:
         # check if move exists and is towards food
         if 'right' in moves and player_head['x'] < closest_food['x']:
-            moves['right'] = (moves['right'][0], moves['right'][1] + 1)
+            moves['right'] = (moves['right'][0], moves['right'][1] + 2)
         elif 'left' in moves and player_head['x'] > closest_food['x']:
-            moves['left'] = (moves['left'][0], moves['left'][1] + 1)
+            moves['left'] = (moves['left'][0], moves['left'][1] + 2)
         elif 'up' in moves and player_head['y'] < closest_food['y']:
-            moves['up'] = (moves['up'][0], moves['up'][1] + 1)
+            moves['up'] = (moves['up'][0], moves['up'][1] + 2)
         elif 'down' in moves and player_head['y'] > closest_food['y']:
+            moves['down'] = (moves['down'][0], moves['down'][1] + 2)
+
+    # No need to clean move list since no danger is added
+    # Return the move list
+    return moves
+
+
+def aim_for_middle(game_state, player_head, moves):
+    middle = (game_state['board']['width'] // 2, game_state['board']['height'] // 2)
+
+    # Add desire to move towards middle
+    # Desire +1
+    if middle is not None:
+        # check if move exists and is towards middle
+        if 'right' in moves and player_head['x'] < middle[0]:
+            moves['right'] = (moves['right'][0], moves['right'][1] + 1)
+        elif 'left' in moves and player_head['x'] > middle[0]:
+            moves['left'] = (moves['left'][0], moves['left'][1] + 1)
+        elif 'up' in moves and player_head['y'] < middle[1]:
+            moves['up'] = (moves['up'][0], moves['up'][1] + 1)
+        elif 'down' in moves and player_head['y'] > middle[1]:
             moves['down'] = (moves['down'][0], moves['down'][1] + 1)
 
     # No need to clean move list since no danger is added
@@ -325,6 +346,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # Aim for food
     moves = aim_for_food(game_state, player_head, moves)
     print(f"Moves after aim_for_food: {moves}")
+
+    # Aim for middle
+    moves = aim_for_middle(game_state, player_head, moves)
+    print(f"Moves after aim_for_middle: {moves}")
 
     # Get move with highest desire
     best_move = max(moves, key=lambda x: moves[x][1])
