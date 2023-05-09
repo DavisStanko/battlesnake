@@ -262,13 +262,14 @@ def aim_for_food(game_state, player_head, moves):
     # Add desire to move towards food
     # Desire 1
     if closest_food is not None:
-        if player_head['x'] < closest_food['x'] and moves['right'][0]:
+        # check if move exists and add desire if it moves towards food
+        if 'right' in moves and player_head['x'] < closest_food['x']:
             moves['right'] = (moves['right'][0], 1)
-        elif player_head['x'] > closest_food['x'] and moves['left'][0]:
+        elif 'left' in moves and player_head['x'] > closest_food['x']:
             moves['left'] = (moves['left'][0], 1)
-        elif player_head['y'] < closest_food['y'] and moves['down'][0]:
+        elif 'down' in moves and player_head['y'] < closest_food['y']:
             moves['down'] = (moves['down'][0], 1)
-        elif player_head['y'] > closest_food['y'] and moves['up'][0]:
+        elif 'up' in moves and player_head['y'] > closest_food['y']:
             moves['up'] = (moves['up'][0], 1)
 
     # No need to clean move list since no danger is added
