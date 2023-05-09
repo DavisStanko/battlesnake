@@ -3,7 +3,7 @@ import typing
 from colorama import Fore, Back
 
 
-# store game info in a class
+# Stores game info
 class Game:
     def __init__(self, game_id, board_width, board_height, game_mode, wrap, constrictor):
         self.game_id = game_id
@@ -38,7 +38,7 @@ class Game:
         print(f"Constrictor: {self.constrictor}")
 
 
-# info is called when you create your Battlesnake on play.battlesnake.com
+# Battlesnake metadata (Name, Author, Color, Head, Tail)
 def info() -> typing.Dict:
     print("INFO")
 
@@ -51,7 +51,7 @@ def info() -> typing.Dict:
     }
 
 
-# start is called when your Battlesnake begins a game
+# Start of game
 def start(game_state: typing.Dict):
     print(Fore.GREEN + "GAME START")
 
@@ -64,16 +64,10 @@ def start(game_state: typing.Dict):
     game_mode = game_state["game"]["ruleset"]["name"]
 
     # check if game mode has wrap
-    if game_mode == "wrapped" or game_mode == "wrapped-constrictor" or game_mode == "spicy-meteors":
-        wrap = True
-    else:
-        wrap = False
-
+    wrap = game_mode in ["wrapped", "wrapped-constrictor", "spicy-meteors"] 
+    
     # check if game mode is constrictor
-    if game_state["game"]["ruleset"]["name"] == "constrictor" or game_state["game"]["ruleset"]["name"] == "wrapped-constrictor":
-        constrictor = True
-    else:
-        constrictor = False
+    constrictor = game_mode in ["constrictor", "wrapped-constrictor"]
 
     global Current_game
     Current_game = Game(game_id, board_width, board_height, game_mode, wrap, constrictor)
