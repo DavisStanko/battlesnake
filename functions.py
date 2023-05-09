@@ -70,10 +70,11 @@ def end(game_state: typing.Dict):
 
 def clean_move_list(moves):
     # Remove all moves except for the ones with the lowest danger
-    min_danger = min(moves.values())
+    min_danger = min(moves.values())[1]
     for move in list(moves):
         if moves[move] > min_danger:
             moves.remove(move)
+
     # Return the updated moves list
     return moves
 
