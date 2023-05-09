@@ -180,6 +180,7 @@ def head_on_collision(game_state, player_head, moves):
                     # Mark the move as potentially unsafe
                     # Danger 2
                     moves[direction] = (moves[direction][0], 2)
+                    break
 
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
