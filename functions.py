@@ -323,7 +323,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     print(f"Moves after aim_for_food: {moves}")
 
     # Get move with highest desire
-    best_move = max(moves, key=lambda x: x[1])
+    best_move = max(moves, key=lambda x: moves[x][1])
     print(f"Best move: {best_move}")
 
     # Move
