@@ -25,6 +25,7 @@ class Game:
     def get_constrictor(self):
         return self.constrictor
 
+
 # Battlesnake metadata (Name, Author, Color, Head, Tail)
 def info() -> typing.Dict:
     return {
@@ -57,12 +58,12 @@ def start(game_state: typing.Dict):
     global Current_game
     Current_game = Game(game_id, board_width, board_height,
                         game_mode, wrap, constrictor)
-    Current_game.print_info()
 
 
 # end is called when your Battlesnake finishes a game
 def end(game_state: typing.Dict):
     pass
+
 
 # move is called on every turn
 def move(game_state: typing.Dict) -> typing.Dict:
@@ -139,13 +140,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # If no safe moves are left
     if len(safe_moves) == 0:
         next_move = 'down'
-            f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
         return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If only one option is left
     if len(safe_moves) == 1:
         next_move = safe_moves[0]
-            f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
     ###############################
@@ -192,7 +191,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
                 # If the opponent is bigger than me
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
-                        f"{Fore.YELLOW}Possible head on collision with {oppponent['id']}{Fore.RESET}")
                     # Mark the move as potentially unsafe
                     temp_is_move_safe[i] = False
                     exit = True
@@ -201,8 +199,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     next_move = i
-                        f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
-                        f"Opponent length = {oppponent['length']} | My length = {game_state['you']['length']}")
                     return {"move": next_move}  # Try to kill the opponent
 
             if exit is True:
@@ -210,7 +206,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
         # if all moves could result in a deadly head on collision, do nothing.
         if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
-                f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
+            pass
 
         # get all moves that are not potential deadly head on collisions
         else:
@@ -223,7 +219,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # If only one option is left
             if len(safe_moves) == 1:
                 next_move = safe_moves[0]
-                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
     temp_is_move_safe = moves.copy()
@@ -247,7 +242,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
             # if all moves enter a hazard, do nothing.
             if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
-                    f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
+                pass
 
             # get all moves that aren't onto hazards
             else:
@@ -259,7 +254,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 # If only one option is left, go there
                 if len(safe_moves) == 1:
                     next_move = safe_moves[0]
-                        f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                     return {"move": next_move}
 
     #######################
@@ -288,19 +282,15 @@ def move(game_state: typing.Dict) -> typing.Dict:
     if closest_food is not None:
         if player_head['x'] < closest_food['x'] and moves['right']:
             next_move = 'right'
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['x'] > closest_food['x'] and moves['left']:
             next_move = 'left'
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['y'] < closest_food['y'] and moves['up']:
             next_move = 'up'
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['y'] > closest_food['y'] and moves['down']:
             next_move = 'down'
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
 
         # If no safe moves go to the closest food then move randomly
@@ -308,13 +298,11 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # random safe move
             try:
                 next_move = random.choice(safe_moves)
-                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
                 return {"move": next_move}
             # no safe moves left
             except:
                 # die
                 next_move = 'down'
-                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
                 return {"move": next_move, "shout": "I'm gonna die!"}
 
     ############################
@@ -323,10 +311,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
         # random safe move
         try:
             next_move = random.choice(safe_moves)
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
             return {"move": next_move}
         # no safe moves left
         except:
             next_move = 'down'
-                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
             return {"move": next_move, "shout": "I'm gonna die!"}
