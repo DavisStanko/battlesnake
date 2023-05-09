@@ -270,11 +270,11 @@ def aim_for_food(game_state, player_head, moves):
         # check if move exists and is towards food
         if 'right' in moves and player_head['x'] < closest_food['x']:
             moves['right'] = (moves['right'][0], moves['right'][1] + 2)
-        elif 'left' in moves and player_head['x'] > closest_food['x']:
+        if 'left' in moves and player_head['x'] > closest_food['x']:
             moves['left'] = (moves['left'][0], moves['left'][1] + 2)
-        elif 'up' in moves and player_head['y'] < closest_food['y']:
+        if 'up' in moves and player_head['y'] < closest_food['y']:
             moves['up'] = (moves['up'][0], moves['up'][1] + 2)
-        elif 'down' in moves and player_head['y'] > closest_food['y']:
+        if 'down' in moves and player_head['y'] > closest_food['y']:
             moves['down'] = (moves['down'][0], moves['down'][1] + 2)
 
     # No need to clean move list since no danger is added
@@ -291,11 +291,11 @@ def aim_for_middle(game_state, player_head, moves):
         # check if move exists and is towards middle
         if 'right' in moves and player_head['x'] < middle[0]:
             moves['right'] = (moves['right'][0], moves['right'][1] + 1)
-        elif 'left' in moves and player_head['x'] > middle[0]:
+        if 'left' in moves and player_head['x'] > middle[0]:
             moves['left'] = (moves['left'][0], moves['left'][1] + 1)
-        elif 'up' in moves and player_head['y'] < middle[1]:
+        if 'up' in moves and player_head['y'] < middle[1]:
             moves['up'] = (moves['up'][0], moves['up'][1] + 1)
-        elif 'down' in moves and player_head['y'] > middle[1]:
+        if 'down' in moves and player_head['y'] > middle[1]:
             moves['down'] = (moves['down'][0], moves['down'][1] + 1)
 
     # No need to clean move list since no danger is added
