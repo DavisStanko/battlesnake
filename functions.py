@@ -1,5 +1,4 @@
 import typing
-import logging
 
 # Stores game info
 class Game:
