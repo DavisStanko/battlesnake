@@ -267,10 +267,10 @@ def aim_for_food(game_state, player_head, moves):
             moves['right'] = (moves['right'][0], 1)
         elif 'left' in moves and player_head['x'] > closest_food['x']:
             moves['left'] = (moves['left'][0], 1)
-        elif 'down' in moves and player_head['y'] < closest_food['y']:
-            moves['down'] = (moves['down'][0], 1)
-        elif 'up' in moves and player_head['y'] > closest_food['y']:
+        elif 'up' in moves and player_head['y'] < closest_food['y']:
             moves['up'] = (moves['up'][0], 1)
+        elif 'down' in moves and player_head['y'] > closest_food['y']:
+            moves['down'] = (moves['down'][0], 1)
 
     # No need to clean move list since no danger is added
     # Return the move list
