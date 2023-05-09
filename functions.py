@@ -113,23 +113,20 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
     for snake in snakes:
         for body_part in snake['body']:
             # Check if body part was moved out of the way
-            if {'x': -1, 'y': -1} in body_part.values():
+            if {'x': -1, 'y': -1} in body_part:
                 continue
-            # Check if body paplayer_head['x'] -rt is to the left of head
-            elif {'x': 1, 'y': player_head['y']} in body_part.values():
+            # Check if body part is to the left of head
+            elif body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
                 moves['left'] = (moves['left'][0], 4)
             # Check if body part is to the right of head
-            elif {'x': player_head['x'] + 1, 'y': player_head['y']} in body_part.values():
+            elif body_part['x'] == player_head['x'] + 1 and body_part['y'] == player_head['y']:
                 moves['right'] = (moves['right'][0], 4)
             # Check if body part is below head
-            elif {'x': player_head['x'], 'y': player_head['y'] - 1} in body_part.values():
+            elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] - 1:
                 moves['down'] = (moves['down'][0], 4)
             # Check if body part is above head
-            elif {'x': player_head['x'], 'y': player_head['y'] + 1} in body_part.values():
+            elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] + 1:
                 moves['up'] = (moves['up'][0], 4)
-
-    print(f"{Fore.RED}Avoid Snakes{Style.RESET_ALL}")
-    print(f"{moves}")
 
     # Clean move list
     moves = clean_move_list(moves)
