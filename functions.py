@@ -1,4 +1,5 @@
 import typing
+from colorama import Fore, Back
 
 
 # Stores game info
@@ -38,6 +39,8 @@ def info() -> typing.Dict:
 
 # Start of game
 def start(game_state: typing.Dict):
+    # Print start message
+    print(Fore.GREEN + "START")
 
     # create game class
     game_id = game_state["game"]["id"]
