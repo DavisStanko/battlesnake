@@ -24,7 +24,7 @@ class Game:
 
     def get_constrictor(self):
         return self.constrictor
-    
+
     def print_info(self):
         print(f"Game ID: {self.game_id}")
         print(f"Board Width: {self.board_width}")
@@ -179,14 +179,14 @@ def head_on_collision(game_state, player_head, moves):
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
                     # Danger 2
-                    move[str(x)] = (move[str(x)][0], 2)
-                    break
+                    moves[direction] = (moves[direction][0], 2)
 
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     # Desire 3
-                    move[str(x)] = (move[str(x)][1], 3)
+                    moves[direction] = (moves[direction][1], 3)
+                    
 
     # Clean move list
     moves = clean_move_list(moves)
