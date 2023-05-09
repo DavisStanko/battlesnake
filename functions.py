@@ -185,21 +185,21 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
         # Get the coordinates for each safe move
         if i == "left":
-            nextMoves.append((player_head['x']-1, player_head['y']))
+            nextMoves.append((player_head['x'] - 1, player_head['y']))
         if i == "right":
-            nextMoves.append((player_head['x']+1, player_head['y']))
+            nextMoves.append((player_head['x'] + 1, player_head['y']))
         if i == "up":
-            nextMoves.append((player_head['x'], player_head['y']+1))
+            nextMoves.append((player_head['x'], player_head['y'] + 1))
         if i == "down":
-            nextMoves.append((player_head['x'], player_head['y']-1))
+            nextMoves.append((player_head['x'], player_head['y'] - 1))
 
         # Get the coordinates for each safe move's adjacent tile
         future_moves = []
         for x in nextMoves:
-            future_moves.append((x[0]-1, x[1]))
-            future_moves.append((x[0]+1, x[1]))
-            future_moves.append((x[0], x[1]-1))
-            future_moves.append((x[0], x[1]+1))
+            future_moves.append((x[0] - 1, x[1]))
+            future_moves.append((x[0] + 1, x[1]))
+            future_moves.append((x[0], x[1] - 1))
+            future_moves.append((x[0], x[1] + 1))
 
         # Get list of all snake bodies
         opponents = game_state['board']['snakes']
