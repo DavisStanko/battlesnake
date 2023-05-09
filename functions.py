@@ -99,10 +99,10 @@ def avoid_borders(player_head, board_width, board_height, moves):
 
 
 def avoid_snakes(player_head, moves, snakes, constrictor):
-    # Check if the tail is going to move out of the way
-    for snake in snakes:
-        # Check for constrictor game mode
-        if constrictor is False:
+    # Check for constrictor game mode
+    if constrictor is False:
+        # Check if the tail is going to move out of the way
+        for snake in snakes:
             # Check if the snake just ate food
             if snake['body'][-1] != snake['body'][-2]:  # Tail doubled up
                 # Remove the tail from the list of snakes
@@ -115,8 +115,8 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
             # Check if body part was moved out of the way
             if {'x': -1, 'y': -1} in body_part.values():
                 continue
-            # Check if body part is to the left of head
-            elif {'x': player_head['x'] - 1, 'y': player_head['y']} in body_part.values():
+            # Check if body paplayer_head['x'] -rt is to the left of head
+            elif {'x':  1, 'y': player_head['y']} in body_part.values():
                 moves['left'] = (moves['left'][0], 4)
             # Check if body part is to the right of head
             elif {'x': player_head['x'] + 1, 'y': player_head['y']} in body_part.values():
@@ -174,14 +174,14 @@ def head_on_collision(game_state, player_head, moves):
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
                     # Danger 2
-                    move[1] = 2
+                    move[x] = (move[x][0], 2)
                     break
 
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     # Desire 3
-                    move[2] = 3
+                    move[x] = (move[x][1], 3)
 
     # Clean move list
     moves = clean_move_list(moves)
