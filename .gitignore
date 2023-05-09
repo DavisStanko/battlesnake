@@ -1,7 +1,0 @@
-.gitignore
-.breakpoints
-.replit
-poetry.lock
-pyproject.toml
-replit.nix
-venv/
