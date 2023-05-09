@@ -64,13 +64,14 @@ def start(game_state: typing.Dict):
     game_mode = game_state["game"]["ruleset"]["name"]
 
     # check if game mode has wrap
-    wrap = game_mode in ["wrapped", "wrapped-constrictor", "spicy-meteors"] 
-    
+    wrap = game_mode in ["wrapped", "wrapped-constrictor", "spicy-meteors"]
+
     # check if game mode is constrictor
     constrictor = game_mode in ["constrictor", "wrapped-constrictor"]
 
     global Current_game
-    Current_game = Game(game_id, board_width, board_height, game_mode, wrap, constrictor)
+    Current_game = Game(game_id, board_width, board_height,
+                        game_mode, wrap, constrictor)
     Current_game.print_info()
 
 
@@ -106,7 +107,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     ###############################
 
     # Avoid borders if wrap is not enabled
-    if wrap == False:
+    if wrap is False:
         if player_head['x'] == 0:
             is_move_safe['left'] = False
             print("Border left")
@@ -127,7 +128,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     # Check if the tail is going to move out of the way
     for snake in snakes:
         # Check for constrictor game mode
-        if constrictor == False:
+        if constrictor is False:
             # Check if the snake just ate food
             if snake['body'][-1] != snake['body'][-2]:  # Tail doubled up
                 # Remove the tail from the list of snakes
@@ -156,22 +157,21 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     is_move_safe['up'] = False
                     print("snake above")
 
-
-
     # Are there any safe moves left?
     safe_moves = [move for move, isSafe in is_move_safe.items() if isSafe]
-
 
     # If no safe moves are left
     if len(safe_moves) == 0:
         next_move = 'down'
-        print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
+        print(
+            f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
         return {"move": next_move, "shout": "I'm gonna die!"}
 
     # If only one option is left
     if len(safe_moves) == 1:
         next_move = safe_moves[0]
-        print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
+        print(
+            f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
         return {"move": next_move}
 
     ###############################
@@ -216,36 +216,45 @@ def move(game_state: typing.Dict) -> typing.Dict:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
 
-                if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:  # If the opponent is bigger than me
-                    print(f"{Fore.YELLOW}Possible head on collision with {oppponent['id']}{Fore.RESET}")
-                    temp_is_move_safe[i] = False  # Mark the move as potentially unsafe
+                # If the opponent is bigger than me
+                if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
+                    print(
+                        f"{Fore.YELLOW}Possible head on collision with {oppponent['id']}{Fore.RESET}")
+                    # Mark the move as potentially unsafe
+                    temp_is_move_safe[i] = False
                     exit = True
                     break
 
-                elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:  # If the opponent is smaller than me
+                # If the opponent is smaller than me
+                elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     next_move = i
-                    print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
-                    print(f"Opponent length = {oppponent['length']} | My length = {game_state['you']['length']}")
+                    print(
+                        f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Attempt to kill {oppponent['id']}){Fore.RESET}")
+                    print(
+                        f"Opponent length = {oppponent['length']} | My length = {game_state['you']['length']}")
                     return {"move": next_move}  # Try to kill the opponent
 
-            if exit == True:
+            if exit is True:
                 break
 
         # if all moves could result in a deadly head on collision, do nothing.
-        if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
-            print(f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
+        if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
+            print(
+                f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
 
         # get all moves that are not potential deadly head on collisions
         else:
             is_move_safe = temp_is_move_safe.copy()
 
             # Are there any safe moves left?
-            safe_moves = [move for move, isSafe in is_move_safe.items() if isSafe]
+            safe_moves = [move for move,
+                          isSafe in is_move_safe.items() if isSafe]
 
             # If only one option is left
             if len(safe_moves) == 1:
                 next_move = safe_moves[0]
-                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
+                print(
+                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                 return {"move": next_move}
 
     temp_is_move_safe = is_move_safe.copy()
@@ -272,19 +281,22 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 print("Hazard above")
 
             # if all moves enter a hazard, do nothing.
-            if temp_is_move_safe['up'] == False and temp_is_move_safe['down'] == False and temp_is_move_safe['left'] == False and temp_is_move_safe['right'] == False:
-                print(f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
+            if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
+                print(
+                    f"{Fore.YELLOW}All safe moves are potential deadly head on collisions{Fore.RESET}")
 
             # get all moves that aren't onto hazards
             else:
                 is_move_safe = temp_is_move_safe.copy()
 
-                safe_moves = [move for move, isSafe in is_move_safe.items() if isSafe]
+                safe_moves = [move for move,
+                              isSafe in is_move_safe.items() if isSafe]
 
                 # If only one option is left, go there
                 if len(safe_moves) == 1:
                     next_move = safe_moves[0]
-                    print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
+                    print(
+                        f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Forced){Fore.RESET}")
                     return {"move": next_move}
 
     #######################
@@ -303,7 +315,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
     closest_food = None
     closest_food_distance = 9999  # Start with an impossibly large number
     for piece_of_food in foods:
-        distance = abs(player_head['x'] - piece_of_food['x']) + abs(player_head['y'] - piece_of_food['y'])
+        distance = abs(player_head['x'] - piece_of_food['x']) + \
+            abs(player_head['y'] - piece_of_food['y'])
         if distance < closest_food_distance:
             closest_food = piece_of_food
             closest_food_distance = distance
@@ -312,19 +325,23 @@ def move(game_state: typing.Dict) -> typing.Dict:
     if closest_food is not None:
         if player_head['x'] < closest_food['x'] and is_move_safe['right']:
             next_move = 'right'
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['x'] > closest_food['x'] and is_move_safe['left']:
             next_move = 'left'
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['y'] < closest_food['y'] and is_move_safe['up']:
             next_move = 'up'
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
         elif player_head['y'] > closest_food['y'] and is_move_safe['down']:
             next_move = 'down'
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Moving towards food){Fore.RESET}")
             return {"move": next_move}
 
         # If no safe moves go to the closest food then move randomly
@@ -333,13 +350,15 @@ def move(game_state: typing.Dict) -> typing.Dict:
             # random safe move
             try:
                 next_move = random.choice(safe_moves)
-                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
+                print(
+                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
                 return {"move": next_move}
             # no safe moves left
             except:
                 # die
                 next_move = 'down'
-                print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
+                print(
+                    f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
                 return {"move": next_move, "shout": "I'm gonna die!"}
 
     ############################
@@ -349,10 +368,12 @@ def move(game_state: typing.Dict) -> typing.Dict:
         # random safe move
         try:
             next_move = random.choice(safe_moves)
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move} (Random safe move){Fore.RESET}")
             return {"move": next_move}
         # no safe moves left
         except:
             next_move = 'down'
-            print(f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
+            print(
+                f"{Fore.BLUE}TURN {game_state['turn']} Going {next_move}{Fore.RESET} {Back.RED}(No safe moves left){Back.RESET}")
             return {"move": next_move, "shout": "I'm gonna die!"}
