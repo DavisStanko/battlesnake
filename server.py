@@ -1,4 +1,3 @@
-import logging
 import os
 import typing
 
@@ -40,7 +39,7 @@ def run_server(handlers: typing.Dict):
     host = "0.0.0.0"
     port = int(os.environ.get("PORT", "8000"))
 
-    logging.getLogger("werkzeug").setLevel(logging.ERROR)
+    # logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
     print(f"\nRunning Battlesnake at http://{host}:{port}")
     app.run(host=host, port=port)
