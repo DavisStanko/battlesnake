@@ -116,7 +116,7 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
             if {'x': -1, 'y': -1} in body_part.values():
                 continue
             # Check if body paplayer_head['x'] -rt is to the left of head
-            elif {'x':  1, 'y': player_head['y']} in body_part.values():
+            elif {'x': 1, 'y': player_head['y']} in body_part.values():
                 moves['left'] = (moves['left'][0], 4)
             # Check if body part is to the right of head
             elif {'x': player_head['x'] + 1, 'y': player_head['y']} in body_part.values():
