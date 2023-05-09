@@ -70,10 +70,10 @@ def end(game_state: typing.Dict):
 
 def clean_move_list(moves):
     # find the minimum danger level among all moves
-    min_danger = min(moves, key=lambda x: x[1])[1]
+    min_danger = min(moves.values(), key=lambda x: x[1])[1]
 
     # create a new dictionary containing only the moves with the minimum danger level
-    updated_moves = {move: danger for move, danger in moves.items() if danger == min_danger}
+    updated_moves = {move: danger for move, danger in moves.items() if danger[1] == min_danger}
 
     # return the updated moves dictionary
     return updated_moves
