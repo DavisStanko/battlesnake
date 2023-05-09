@@ -1,4 +1,3 @@
-import random
 import typing
 
 
@@ -65,47 +64,34 @@ def end(game_state: typing.Dict):
     pass
 
 
-# move is called on every turn
-def move(game_state: typing.Dict) -> typing.Dict:
-    # get info from game class' getters
-    board_width = Current_game.get_board_width()
-    board_height = Current_game.get_board_height()
-    wrap = Current_game.get_wrap()
-    constrictor = Current_game.get_constrictor()
+def clean_move_list(moves):
+    # Remove all moves except for the ones with the lowest danger
+    min_danger = min(moves.values())
+    for move in list(moves):
+        if moves[move] > min_danger:
+            moves.remove(move)
 
-    # reset list of valid moves
-    moves = {
-        "up": True,
-        "down": True,
-        "left": True,
-        "right": True
-    }
 
-    # locate the head of the snake
-    player_head = game_state["you"]["body"][0]  # Coordinates of your head
+def avoid_borders(player_head, board_width, board_height, moves):
+    # Check if the Battlesnake is at the edge of the board
+    # Danger 5
+    if player_head['x'] == 0:
+        moves['left'][1] = 5
+    if player_head['x'] == board_width - 1:
+        moves['right'][1] = 5
+    if player_head['y'] == 0:
+        moves['down'][1] = 5
+    if player_head['y'] == board_height - 1:
+        moves['up'][1] = 5
 
-    # define snakes
-    snakes = game_state['board']['snakes']
+    # Clean move list
+    moves = clean_move_list(moves)
 
-    ###############################
-    ### AVOID BORDER COLLISIONS ###
-    ###############################
+    # Return the updated moves list
+    return moves
 
-    # Avoid borders if wrap is not enabled
-    if wrap is False:
-        if player_head['x'] == 0:
-            moves['left'] = False
-        if player_head['x'] == board_width - 1:
-            moves['right'] = False
-        if player_head['y'] == 0:
-            moves['down'] = False
-        if player_head['y'] == board_height - 1:
-            moves['up'] = False
 
-    #############################
-    ### AVOID SNAKE COLLISION ###
-    #############################
-
+def avoid_snakes(player_head, moves, snakes, constrictor):
     # Check if the tail is going to move out of the way
     for snake in snakes:
         # Check for constrictor game mode
@@ -116,6 +102,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 snake['body'].pop()
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
+    # Danger 4
         for snake in snakes:
             for body_part in snake['body']:
                 # Check if body part was moved out of the way
@@ -123,47 +110,37 @@ def move(game_state: typing.Dict) -> typing.Dict:
                     continue
                 # Check if body part is to the left of head
                 elif {'x': player_head['x'] - 1, 'y': player_head['y']} in body_part.values():
-                    moves['left'] = False
+                    moves['left'][1] = 4
                 # Check if body part is to the right of head
                 elif {'x': player_head['x'] + 1, 'y': player_head['y']} in body_part.values():
-                    moves['right'] = False
+                    moves['right'][1] = 4
                 # Check if body part is below head
                 elif {'x': player_head['x'], 'y': player_head['y'] - 1} in body_part.values():
-                    moves['down'] = False
+                    moves['down'][1] = 4
                 # Check if body part is above head
                 elif {'x': player_head['x'], 'y': player_head['y'] + 1} in body_part.values():
-                    moves['up'] = False
+                    moves['up'][1] = 4
 
-    # Are there any safe moves left?
-    safe_moves = [move for move, isSafe in moves.items() if isSafe]
+    # Clean move list
+    moves = clean_move_list(moves)
 
-    # If no safe moves are left
-    if len(safe_moves) == 0:
-        next_move = 'down'
-        return {"move": next_move, "shout": "I'm gonna die!"}
+    # Return the updated moves list
+    return moves
 
-    # If only one option is left
-    if len(safe_moves) == 1:
-        next_move = safe_moves[0]
-        return {"move": next_move}
 
-    ###############################
-    ### HEAD ON COLLISION LOGIC ###
-    ###############################
-
-    # Head on collision avoidance
+def head_on_collision(game_state, player_head, moves):
     # Check future moves
-    for i in safe_moves:
+    for i in moves:
         nextMoves = []
 
         # Get the coordinates for each safe move
         if i == "left":
             nextMoves.append((player_head['x'] - 1, player_head['y']))
-        if i == "right":
+        elif i == "right":
             nextMoves.append((player_head['x'] + 1, player_head['y']))
-        if i == "up":
+        elif i == "up":
             nextMoves.append((player_head['x'], player_head['y'] + 1))
-        if i == "down":
+        elif i == "down":
             nextMoves.append((player_head['x'], player_head['y'] - 1))
 
         # Get the coordinates for each safe move's adjacent tile
@@ -182,9 +159,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 opponents.remove(x)
                 break
 
-        # Check if any of the adjacent squares are occupied by an opponent to predict head on collisions
-        temp_is_move_safe = moves.copy()
-        exit = False
         for x in future_moves:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
@@ -192,74 +166,74 @@ def move(game_state: typing.Dict) -> typing.Dict:
                 # If the opponent is bigger than me
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
-                    temp_is_move_safe[i] = False
-                    exit = True
+                    # Danger 2
+                    moves[i][1] = 2
                     break
 
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
-                    next_move = i
-                    return {"move": next_move}  # Try to kill the opponent
+                    # Mark the move as a potential kill
+                    # Desire 3
+                    moves[i][2] = 3
 
-            if exit is True:
-                break
+    # Clean move list
+    moves = clean_move_list(moves)
 
-        # if all moves could result in a deadly head on collision, do nothing.
-        if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
-            pass
+    return moves
 
-        # get all moves that are not potential deadly head on collisions
-        else:
-            moves = temp_is_move_safe.copy()
 
-            # Are there any safe moves left?
-            safe_moves = [move for move,
-                          isSafe in moves.items() if isSafe]
+def avoid_hazards(game_state, player_head, moves, player_health):
+    # Get hazard damage
+    hazard_damage = game_state['game']['ruleset']['settings']['hazardDamagePerTurn']
 
-            # If only one option is left
-            if len(safe_moves) == 1:
-                next_move = safe_moves[0]
-                return {"move": next_move}
-
-    temp_is_move_safe = moves.copy()
-
-    ##############################
-    ### HAZARD AVOIDANCE LOGIC ###
-    ##############################
-
-    # check if there are hazards on the board
+    # Check if there are hazards on the board
     if len(game_state['board']['hazards']) > 0:
-        # avoid hazard sauce if possible
+        # Get hazard coordinates
         for i in game_state['board']['hazards']:
             if i['x'] == player_head['x'] - 1 and i['y'] == player_head['y']:
-                temp_is_move_safe['left'] = False
+                # Hazard damage is lethal
+                # Danger 5
+                if hazard_damage >= player_health:
+                    moves['left'][1] = 5
+                # Hazard damage is not lethal
+                # Danger 2
+                else:
+                    moves['left'][1] = 2
             if i['x'] == player_head['x'] + 1 and i['y'] == player_head['y']:
-                temp_is_move_safe['right'] = False
+                # Hazard damage is lethal
+                # Danger 5
+                if hazard_damage >= player_health:
+                    moves['right'][1] = 5
+                # Hazard damage is not lethal
+                # Danger 2
+                else:
+                    moves['right'][1] = 2
             if i['y'] == player_head['y'] - 1 and i['x'] == player_head['x']:
-                temp_is_move_safe['down'] = False
+                # Check if hazard damage is lethal
+                # Danger 5
+                if hazard_damage >= player_health:
+                    moves['down'][1] = 5
+                # Hazard damage is not lethal
+                # Danger 2
+                else:
+                    moves['down'][1] = 2
             if i['y'] == player_head['y'] + 1 and i['x'] == player_head['x']:
-                temp_is_move_safe['up'] = False
+                # Check if hazard damage is lethal
+                # Danger 5
+                if hazard_damage >= player_health:
+                    moves['up'][1] = 5
+                # Hazard damage is not lethal
+                # Danger 2
+                else:
+                    moves['up'][1] = 2
 
-            # if all moves enter a hazard, do nothing.
-            if temp_is_move_safe['up'] is False and temp_is_move_safe['down'] is False and temp_is_move_safe['left'] is False and temp_is_move_safe['right'] is False:
-                pass
+    # Clean move list
+    moves = clean_move_list(moves)
 
-            # get all moves that aren't onto hazards
-            else:
-                moves = temp_is_move_safe.copy()
+    return moves
 
-                safe_moves = [move for move,
-                              isSafe in moves.items() if isSafe]
 
-                # If only one option is left, go there
-                if len(safe_moves) == 1:
-                    next_move = safe_moves[0]
-                    return {"move": next_move}
-
-    #######################
-    ### FOOD GAME LOGIC ###
-    #######################
-
+def aim_for_food(game_state, player_head, moves):
     # Get the coordinates for each food
     foods = game_state['board']['food']
 
@@ -278,41 +252,62 @@ def move(game_state: typing.Dict) -> typing.Dict:
             closest_food = piece_of_food
             closest_food_distance = distance
 
-    # Move towards the closest food if it's safe
+    # Add desire to move towards food
+    # Desire 1
     if closest_food is not None:
         if player_head['x'] < closest_food['x'] and moves['right']:
-            next_move = 'right'
-            return {"move": next_move}
+            moves['right'][2] = 1
         elif player_head['x'] > closest_food['x'] and moves['left']:
-            next_move = 'left'
-            return {"move": next_move}
+            moves['left'][2] = 1
         elif player_head['y'] < closest_food['y'] and moves['up']:
-            next_move = 'up'
-            return {"move": next_move}
+            moves['up'][2] = 1
         elif player_head['y'] > closest_food['y'] and moves['down']:
-            next_move = 'down'
-            return {"move": next_move}
+            moves['down'][2] = 1
 
-        # If no safe moves go to the closest food then move randomly
-        else:
-            # random safe move
-            try:
-                next_move = random.choice(safe_moves)
-                return {"move": next_move}
-            # no safe moves left
-            except:
-                # die
-                next_move = 'down'
-                return {"move": next_move, "shout": "I'm gonna die!"}
+    # No need to clean move list since no danger is added
+    # Return the move list
+    return moves
 
-    ############################
-    # If no food is left, move randomly
-    else:
-        # random safe move
-        try:
-            next_move = random.choice(safe_moves)
-            return {"move": next_move}
-        # no safe moves left
-        except:
-            next_move = 'down'
-            return {"move": next_move, "shout": "I'm gonna die!"}
+
+# move is called on every turn
+def move(game_state: typing.Dict) -> typing.Dict:
+    # get info from game class' getters
+    board_width = Current_game.get_board_width()
+    board_height = Current_game.get_board_height()
+    wrap = Current_game.get_wrap()
+    constrictor = Current_game.get_constrictor()
+
+    # reset list of valid moves
+    # direction, danger level, desire level
+    moves = [("up", 0, 0), ("down", 0, 0), ("left", 0, 0), ("right", 0, 0)]
+
+    # locate the head of the snake
+    player_head = game_state["you"]["body"][0]  # Coordinates of your head
+
+    # get player health
+    player_health = game_state["you"]["health"]
+
+    # get snake body part coordinates
+    snakes = game_state['board']['snakes']
+
+    # Avoid borders if wrap is not enabled
+    if wrap is False:
+        moves = avoid_borders(player_head, board_width, board_height, moves)
+
+    # Avoid snakes
+    moves = avoid_snakes(player_head, moves, snakes, constrictor)
+
+    # Head on collision logic
+    moves = head_on_collision(game_state, player_head, moves)
+
+    # Avoid hazards
+    moves = avoid_hazards(game_state, player_head, moves, player_health)
+
+    # Aim for food
+    moves = aim_for_food(game_state, player_head, moves)
+
+    # Get move with highest desire
+    best_move = max(moves, key=lambda x: x[2])
+
+    # Move
+    return {"move": best_move[0]}
