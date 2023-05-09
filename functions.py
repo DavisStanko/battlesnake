@@ -184,9 +184,8 @@ def head_on_collision(game_state, player_head, moves):
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
-                    # Desire 3
-                    moves[direction] = (moves[direction][1], 3)
-                    
+                    # Desire +3
+                    moves[direction] = (moves[direction][0], moves[direction][1]+3)   
 
     # Clean move list
     moves = clean_move_list(moves)
@@ -265,17 +264,17 @@ def aim_for_food(game_state, player_head, moves):
             closest_food_distance = distance
 
     # Add desire to move towards food
-    # Desire 1
+    # Desire +1
     if closest_food is not None:
-        # check if move exists and add desire if it moves towards food
+        # check if move exists and is towards food
         if 'right' in moves and player_head['x'] < closest_food['x']:
-            moves['right'] = (moves['right'][0], 1)
+            moves['right'] = (moves['right'][0], moves['right'][1] + 1)
         elif 'left' in moves and player_head['x'] > closest_food['x']:
-            moves['left'] = (moves['left'][0], 1)
+            moves['left'] = (moves['left'][0], moves['left'][1] + 1)
         elif 'up' in moves and player_head['y'] < closest_food['y']:
-            moves['up'] = (moves['up'][0], 1)
+            moves['up'] = (moves['up'][0], moves['up'][1] + 1)
         elif 'down' in moves and player_head['y'] > closest_food['y']:
-            moves['down'] = (moves['down'][0], 1)
+            moves['down'] = (moves['down'][0], moves['down'][1] + 1)
 
     # No need to clean move list since no danger is added
     # Return the move list
