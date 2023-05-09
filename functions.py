@@ -69,14 +69,15 @@ def end(game_state: typing.Dict):
 
 
 def clean_move_list(moves):
-    # Remove all moves except for the ones with the lowest danger
-    min_danger = min(moves.values())[1]
-    for move in list(moves):
-        if moves[move] > min_danger:
-            moves.remove(move)
+    # find the minimum danger level among all moves
+    min_danger = min(moves, key=lambda x: x[1])[1]
 
-    # Return the updated moves list
-    return moves
+    # create a new list containing only the moves with the minimum danger level
+    updated_moves = [move for move in moves if move[1] == min_danger]
+
+    # return the updated moves list
+    return updated_moves
+
 
 
 def avoid_borders(player_head, board_width, board_height, moves):
