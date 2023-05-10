@@ -6,46 +6,60 @@ Battlesnake is a multiplayer snake game where your snake is controlled by code. 
 
 ## Behavior
 
-The snake currently does the following when prompted to move:
+The snake currently makes it's move calculations based on a danger/desire system. Moves are given a danger and desire score each turn. The move with the lowest danger score is chosen. If there are multiple moves with the same danger score, the desire score is used as a tie breaker.
 
-1. Avoids moves that result in instant death if possible (ex. moving into itself, moving out of bounds, or moving into and opponents body).
-    - If there are no safe moves it moves down (helps to differentiate between purposeful moves and errors since errors make the snake move up).
-    - If there is one safe move it moves there.
-    - If a snakes tail is guaranteed to move out of the way (because they can't eat this turn) then the tile occupied by the tail is considered safe.
-    - If the game mode supports wall wrapping, the border is considered safe.
+### Danger
 
-2. Avoids possible head on collisions with bigger or equally sized snakes.
-    - Head on collisions are not covered by step one as all snakes move at once. Therefore it's necessary to look into where the opposing snakes heads *could* end up and avoid that if collision would kill us.
+The danger scord is set to a specific level based on the situation. The levels are as follows:
 
-3. Avoids hazard sauce if possible.
-    - Hazard sauce causes snakes to lose 16hp instead of the normal 1hp per turn.
+- **LEVEL 5** (Certain death).
+  - Moving out of bounds in game modes that don't support wall wrapping.
+  - Moving into self.
+  - Moving into hazrd sauce when hp is less than the hazard sauce damage.
 
-4. Attempts possible head on collisions with smaller snakes.
-    - If there is a possibility of killing a snake via head on collisions: take it. The kill is not guaranteed as the opponent could move elsewhere.
+- **LEVEL 4** (Probable death).
+  - Moving into another snake's body.
+  - (The opponent snake could die before we do, thus freeing up the tilee. However, this is unlikely.)
 
-5. Find the closest apple and move towards it.
-    - Apples reset hp to 100 and extend the snakes length by 1 tile.
+- **LEVEL 3** (Likely death).
+  - Moving into a possible head on collision with a larger snake.
+    - (The opponent snake could move elsewhere, thus avoiding the collision but it's better to be safe than sorry.)
+
+- **LEVEL 2** (Risk of future death).
+  - Moving into hazard sauce when hp is greater than the hazard sauce damage.
+
+- **LEVEL 1** (Placeholder).
+  - Currently unused.
+
+### Desire
+
+Unlike the danger score, the desire score is additive meaning that multiple desires can be applied to a single move. A desire of 6 can technically be achieved if all desires are applied to a single move. The desires are as follows:
+
+- **LEVEL 3** (Highest desire).
+  - Moving towards the nearest apple.
+
+- **LEVEL 2** (Medium desire).
+  - Moving into a possible head on collision with a smaller snake.
+    - (The opponent snake could move elsewhere, thus avoiding the collision but it's nice to be aggressive.)
+
+- **LEVEL 1** (Lowest desire).
+  - Moving towards the middle of the board.
+    - Taking control of the middle of the board is a good strategy in most game modes. Especially in in the contrictor mode where head on collisions always result in death and there is no food.
 
 ## Next Steps
 
 1. Don't move into dead ends.
-    - Currently when there are no apples on screen the snake opts to move randomly around the safe moves available. Furthermore, even when there are apples on screen, the snake moves without regard to its surroundings. This leads it to sometimes choosing moves that lead to immanent (but not immediate) death.
+    - Currently the desires do not take dead ends into account. This means that the snake will happily move into a dead end if it is in the direction of the closest apple.
 
-2. Choose best option when attempting to kill a snake via head on collision.
-    - When approaching a snake diagonally there are two possible head on collisions. Moreover, when in the range of multiple snakes there can be up to three possible head on collisions. In the snakes current form, if there are multiple chances of killing a snake via head on collision it will just pick the first instead of the best.
-
-3. Pathfinding in wrap enabled game modes
+2. Pathfinding in wrap enabled game modes
     - As it stands, the snake does not consider potential shortcuts that involve wrapping through the wall when heading for apples.
-    - Furthermore, the snake does not check to see if wrapping through the wall is safe, treating it only as a last resort.
+    - Furthermore, the snake does not properly check for collisions when wrapping through the wall.
 
-4. Deal with hazard sauce better.
-    - Currently the snake will avoid hazard sauce at all costs regardless of whether or not there is an incentive to enter. Furthermore, it can't find it's way out easily once deep inside the sauce.
-
-5. Purposefully kill other snakes?
+3. Purposefully kill other snakes?
     - The snake does not account for situations where other snakes are able to be trapped. Killing other snakes would end the game sooner and reduce the risk of them killing us later on.
 
-6. Change snake philosophy.
-    - Always moving towards the nearest apple is neither aggressive nor defensive. While it does mean that dying from a lack of health is exceedingly unlikely, it does nothing to prevent other snakes from trapping us.
+4. Better pathfinding.
+    - Searching is done with a rudimentry BFS search with a depth of 1. This means that the snake doesn't notice blocked paths until it is too late. A better search algorithm would be able to see blocked paths further ahead.
 
 ## License
 
