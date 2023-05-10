@@ -81,7 +81,8 @@ def clean_move_list(moves):
     min_danger = min(moves.values(), key=lambda x: x[1])[1]
 
     # create a new dictionary containing only the moves with the minimum danger level
-    updated_moves = {move: danger for move, danger in moves.items() if danger[1] == min_danger}
+    updated_moves = {move: danger for move,
+                     danger in moves.items() if danger[1] == min_danger}
 
     # return the updated moves dictionary
     return updated_moves
@@ -106,7 +107,7 @@ def avoid_borders(player_head, board_width, board_height, moves):
     return moves
 
 
-def avoid_snakes(player_head, moves, snakes, constrictor):
+def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
     # Check for constrictor game mode
     if constrictor is False:
         # Check if the tail is going to move out of the way
@@ -119,19 +120,21 @@ def avoid_snakes(player_head, moves, snakes, constrictor):
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     # Danger 4
     for snake in snakes:
+        # if the snake is the player danger = 5 otherwise danger = 4
+        danger = 5 if snake['id'] == game_state['you']['id'] else 4
         for body_part in snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
-                moves['left'] = (moves['left'][0], 4)
+                moves['left'] = (moves['left'][0], danger)
             # Check if body part is to the right of head
             elif body_part['x'] == player_head['x'] + 1 and body_part['y'] == player_head['y']:
-                moves['right'] = (moves['right'][0], 4)
+                moves['right'] = (moves['right'][0], danger)
             # Check if body part is below head
             elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] - 1:
-                moves['down'] = (moves['down'][0], 4)
+                moves['down'] = (moves['down'][0], danger)
             # Check if body part is above head
             elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] + 1:
-                moves['up'] = (moves['up'][0], 4)
+                moves['up'] = (moves['up'][0], danger)
 
     # Clean move list
     moves = clean_move_list(moves)
@@ -186,7 +189,8 @@ def head_on_collision(game_state, player_head, moves):
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     # Desire +3
-                    moves[direction] = (moves[direction][0], moves[direction][1] + 3)
+                    moves[direction] = (moves[direction][0],
+                                        moves[direction][1] + 3)
 
     # Clean move list
     moves = clean_move_list(moves)
@@ -283,7 +287,8 @@ def aim_for_food(game_state, player_head, moves):
 
 
 def aim_for_middle(game_state, player_head, moves):
-    middle = (game_state['board']['width'] // 2, game_state['board']['height'] // 2)
+    middle = (game_state['board']['width'] // 2,
+              game_state['board']['height'] // 2)
 
     # Add desire to move towards middle
     # Desire +1
@@ -333,7 +338,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
         print(f"Moves after avoid_borders: {moves}")
 
     # Avoid snakes
-    moves = avoid_snakes(player_head, moves, snakes, constrictor)
+    moves = avoid_snakes(game_state, player_head, moves, snakes, constrictor)
     print(f"Moves after avoid_snakes: {moves}")
 
     # Head on collision logic
