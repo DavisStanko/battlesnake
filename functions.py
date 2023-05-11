@@ -8,9 +8,9 @@ POSSIBLE_DEATH = 2
 HARM = 1
 
 # Desire levels
-KILL_DESIRE = 4
-FOOD_DESIRE = 3
-MIDDLE_DESIRE = 2
+KILL_DESIRE = 1000
+FOOD_DESIRE = 100
+MIDDLE_DESIRE = 10
 TAIL_DESIRE = 1
 
 
@@ -379,6 +379,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # Initialize best_move to None
     best_move = None
+    
+    # Check if any moves are available
     if moves:
         best_move = max(moves, key=lambda key: moves[key][1])
         print(f"Best move: {best_move}")
