@@ -13,9 +13,6 @@ FOOD_DESIRE = 100
 MIDDLE_DESIRE = 10
 TAIL_DESIRE = 1
 
-# Deltas
-MOVE_DELTAS = {'left': (-1, 0), 'right': (1, 0), 'up': (0, -1), 'down': (0, 1)}
-
 
 # Stores game info
 class Game:
@@ -104,42 +101,63 @@ def clean_move_list(moves):
 
 
 def avoid_borders(player_head, board_width, board_height, moves):
-    moves['left'] = (moves['left'][0],
-                     CERTAIN_DEATH) if player_head['x'] == 0 else moves['left']
-    moves['right'] = (
-        moves['right'][0], CERTAIN_DEATH) if player_head['x'] == board_width - 1 else moves['right']
-    moves['down'] = (moves['down'][0],
-                     CERTAIN_DEATH) if player_head['y'] == 0 else moves['down']
-    moves['up'] = (
-        moves['up'][0], CERTAIN_DEATH) if player_head['y'] == board_height - 1 else moves['up']
+    # Check if the Battlesnake is at the edge of the board
+    if player_head['x'] == 0:
+        moves['left'] = (moves['left'][0], CERTAIN_DEATH)
+    if player_head['x'] == board_width - 1:
+        moves['right'] = (moves['right'][0], CERTAIN_DEATH)
+    if player_head['y'] == 0:
+        moves['down'] = (moves['down'][0], CERTAIN_DEATH)
+    if player_head['y'] == board_height - 1:
+        moves['up'] = (moves['up'][0], CERTAIN_DEATH)
 
-    return clean_move_list(moves)
+    # Clean move list
+    moves = clean_move_list(moves)
+
+    # Return the updated moves dictionary
+    return moves
 
 
 def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
     # Check for constrictor game mode
-    if not constrictor:
+    if constrictor is False:
         # Check if the tail is going to move out of the way
         for snake in snakes:
+            # Check if the snake just ate food
             if snake['body'][-1] != snake['body'][-2]:  # Tail doubled up
+                # Remove the tail from the list of snakes
                 snake['body'].pop()
 
-    # Check for collision with other snakes
+    # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for snake in snakes:
+        # if the snake is the player danger = 5 otherwise danger = 4
         danger = CERTAIN_DEATH if snake['id'] == game_state['you']['id'] else PROBABLE_DEATH
-        for move, delta in MOVE_DELTAS.items():
-            adjacent_tiles = [(player_head['x'] + delta[0],
-                               player_head['y'] + delta[1])]
-            if adjacent_tiles in snake['body']:
-                moves[move] = (moves[move][1], danger)
+        for body_part in snake['body']:
+            # Check if body part is to the left of head
+            if body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
+                moves['left'] = (moves['left'][0], danger)
+            # Check if body part is to the right of head
+            elif body_part['x'] == player_head['x'] + 1 and body_part['y'] == player_head['y']:
+                moves['right'] = (moves['right'][0], danger)
+            # Check if body part is below head
+            elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] - 1:
+                moves['down'] = (moves['down'][0], danger)
+            # Check if body part is above head
+            elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] + 1:
+                moves['up'] = (moves['up'][0], danger)
 
-    return clean_move_list(moves)
+    # Clean move list
+    moves = clean_move_list(moves)
+
+    # Return the updated moves dictionary
+    return moves
 
 
 def head_on_collision(game_state, player_head, moves):
     # Check future moves
     for direction, move in moves.items():
         nextMoves = []
+
         # Get the coordinates for each safe move
         if direction == "left":
             nextMoves.append((player_head['x'] - 1, player_head['y']))
@@ -149,6 +167,7 @@ def head_on_collision(game_state, player_head, moves):
             nextMoves.append((player_head['x'], player_head['y'] + 1))
         elif direction == "down":
             nextMoves.append((player_head['x'], player_head['y'] - 1))
+
         # Get the coordinates for each safe move's adjacent tile
         future_moves = []
         for x in nextMoves:
@@ -156,6 +175,7 @@ def head_on_collision(game_state, player_head, moves):
             future_moves.append((x[0] + 1, x[1]))
             future_moves.append((x[0], x[1] - 1))
             future_moves.append((x[0], x[1] + 1))
+
         # Get list of all snake bodies
         opponents = game_state['board']['snakes']
         # Remove myself from the list of opponents
@@ -163,20 +183,25 @@ def head_on_collision(game_state, player_head, moves):
             if x['id'] == game_state["you"]["id"]:
                 opponents.remove(x)
                 break
+
         for x in future_moves:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
+
                 # If the opponent is bigger than me
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
                     moves[direction] = (moves[direction][0], POSSIBLE_DEATH)
                     break
+
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
                     moves[direction] = (moves[direction][0], moves[direction][1] + KILL_DESIRE)
+
     # Clean move list
     moves = clean_move_list(moves)
+
     return moves
 
 
@@ -184,38 +209,78 @@ def avoid_hazards(game_state, player_head, moves, player_health):
     # Get hazard damage
     hazard_damage = game_state['game']['ruleset']['settings']['hazardDamagePerTurn']
 
-    # Check for hazards at each adjacent position
-    for move, delta in MOVE_DELTAS.items():
-        adjacent_tiles = (player_head['x'] +
-                          delta[0], player_head['y'] + delta[1])
-        if adjacent_tiles in game_state['board']['hazards']:
-            # Hazard damage is lethal
-            if hazard_damage >= player_health:
-                moves[move] = moves[move][1], CERTAIN_DEATH
-            # Hazard damage is not lethal
-            else:
-                moves[move] = moves[move][1], HARM
+    # Check if there are hazards on the board
+    if len(game_state['board']['hazards']) > 0:
+        # Get hazard coordinates
+        for i in game_state['board']['hazards']:
+            if i['x'] == player_head['x'] - 1 and i['y'] == player_head['y']:
+                # Hazard damage is lethal
+                if hazard_damage >= player_health:
+                    moves['left'] = moves['left'][1], CERTAIN_DEATH
+                # Hazard damage is not lethal
+                else:
+                    moves['left'] = moves['left'][1], HARM
+            if i['x'] == player_head['x'] + 1 and i['y'] == player_head['y']:
+                # Hazard damage is lethal
+                if hazard_damage >= player_health:
+                    moves['right'] = moves['right'][1], CERTAIN_DEATH
+                # Hazard damage is not lethal
+                else:
+                    moves['right'] = moves['right'][1], HARM
+            if i['y'] == player_head['y'] - 1 and i['x'] == player_head['x']:
+                # Check if hazard damage is lethal
+                if hazard_damage >= player_health:
+                    moves['down'] = moves['down'][1], CERTAIN_DEATH
+                # Hazard damage is not lethal
+                else:
+                    moves['down'] = moves['down'][1], HARM
+            if i['y'] == player_head['y'] + 1 and i['x'] == player_head['x']:
+                # Check if hazard damage is lethal
+                if hazard_damage >= player_health:
+                    moves['up'] = moves['up'][1], CERTAIN_DEATH
+                # Hazard damage is not lethal
+                else:
+                    moves['up'] = moves['up'][1], HARM
 
-    return clean_move_list(moves)
+    # Clean move list
+    moves = clean_move_list(moves)
+
+    return moves
 
 
 def aim_for_food(game_state, player_head, moves):
     # Get the coordinates for each food
-    foods = [food for food in game_state['board']['food']
-             if food not in game_state['board']['hazards']]
+    foods = game_state['board']['food']
+
+    # Remove the food if it's in a hazard
+    for food in foods:
+        if food in game_state['board']['hazards']:
+            foods.remove(food)
 
     # Find the closest food
-    closest_food = min(foods, key=lambda food: abs(
-        player_head['x'] - food['x']) + abs(player_head['y'] - food['y']))
+    closest_food = None
+    closest_food_distance = 9999  # Start with an impossibly large number
+    for piece_of_food in foods:
+        distance = abs(player_head['x'] - piece_of_food['x']) + \
+            abs(player_head['y'] - piece_of_food['y'])
+        if distance < closest_food_distance:
+            closest_food = piece_of_food
+            closest_food_distance = distance
 
     # Add desire to move towards food
-    for direction, delta in MOVE_DELTAS.items():
-        if direction in moves:
-            x, y = player_head['x'] + delta[0], player_head['y'] + delta[1]
-            if x == closest_food['x'] and y == closest_food['y']:
-                moves[direction] = (moves[direction][0],
-                                    moves[direction][1] + FOOD_DESIRE)
+    if closest_food is not None:
+        # check if move exists and is towards food
+        if 'right' in moves and player_head['x'] < closest_food['x']:
+            moves['right'] = (moves['right'][0], moves['right'][1] + FOOD_DESIRE)
+        if 'left' in moves and player_head['x'] > closest_food['x']:
+            moves['left'] = (moves['left'][0], moves['left'][1] + FOOD_DESIRE)
+        if 'up' in moves and player_head['y'] < closest_food['y']:
+            moves['up'] = (moves['up'][0], moves['up'][1] + FOOD_DESIRE)
+        if 'down' in moves and player_head['y'] > closest_food['y']:
+            moves['down'] = (moves['down'][0], moves['down'][1] + FOOD_DESIRE)
 
+    # No need to clean move list since no danger is added
+    # Return the move list
     return moves
 
 
@@ -225,15 +290,19 @@ def aim_for_middle(game_state, player_head, moves):
               game_state['board']['height'] // 2)
 
     # Add desire to move towards middle
-    if 'right' in moves and player_head['x'] < middle[0]:
-        moves['right'] = (moves['right'][0], moves['right'][1] + MIDDLE_DESIRE)
-    if 'left' in moves and player_head['x'] > middle[0]:
-        moves['left'] = (moves['left'][0], moves['left'][1] + MIDDLE_DESIRE)
-    if 'up' in moves and player_head['y'] < middle[1]:
-        moves['up'] = (moves['up'][0], moves['up'][1] + MIDDLE_DESIRE)
-    if 'down' in moves and player_head['y'] > middle[1]:
-        moves['down'] = (moves['down'][0], moves['down'][1] + MIDDLE_DESIRE)
+    if middle is not None:
+        # check if move exists and is towards middle
+        if 'right' in moves and player_head['x'] < middle[0]:
+            moves['right'] = (moves['right'][0], moves['right'][1] + MIDDLE_DESIRE)
+        if 'left' in moves and player_head['x'] > middle[0]:
+            moves['left'] = (moves['left'][0], moves['left'][1] + MIDDLE_DESIRE)
+        if 'up' in moves and player_head['y'] < middle[1]:
+            moves['up'] = (moves['up'][0], moves['up'][1] + MIDDLE_DESIRE)
+        if 'down' in moves and player_head['y'] > middle[1]:
+            moves['down'] = (moves['down'][0], moves['down'][1] + MIDDLE_DESIRE)
 
+    # No need to clean move list since no danger is added
+    # Return the move list
     return moves
 
 
@@ -242,6 +311,8 @@ def chase_tail(game_state, player_head, moves):
     tail = game_state['you']['body'][-1]
 
     # Add desire to move towards tail
+    # Desire +1
+    # check if move exists and is towards tail
     if 'right' in moves and player_head['x'] < tail['x']:
         moves['right'] = (moves['right'][0], moves['right'][1] + TAIL_DESIRE)
     if 'left' in moves and player_head['x'] > tail['x']:
@@ -250,7 +321,9 @@ def chase_tail(game_state, player_head, moves):
         moves['up'] = (moves['up'][0], moves['up'][1] + TAIL_DESIRE)
     if 'down' in moves and player_head['y'] > tail['y']:
         moves['down'] = (moves['down'][0], moves['down'][1] + TAIL_DESIRE)
-
+        
+    # No need to clean move list since no danger is added
+    # Return the move list
     return moves
 
 
@@ -291,10 +364,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
     moves = head_on_collision(game_state, player_head, moves)
     print(f"Moves after head_on_collision: {moves}")
 
-    # Avoid hazards if hazard are on the board
-    if game_state['board']['hazards']:
-        moves = avoid_hazards(game_state, player_head, moves, player_health)
-        print(f"Moves after avoid_hazards: {moves}")
+    # Avoid hazards
+    moves = avoid_hazards(game_state, player_head, moves, player_health)
+    print(f"Moves after avoid_hazards: {moves}")
 
     # Aim for food
     moves = aim_for_food(game_state, player_head, moves)
