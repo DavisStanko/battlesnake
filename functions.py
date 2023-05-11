@@ -377,15 +377,8 @@ def move(game_state: typing.Dict) -> typing.Dict:
         moves = chase_tail(game_state, player_head, moves)
         print(f"Moves after chase_tail: {moves}")
 
-    # Initialize best_move to None
-    best_move = None
-    
-    # Check if any moves are available
-    if moves:
-        best_move = max(moves, key=lambda key: moves[key][1])
-        print(f"Best move: {best_move}")
-    else:
-        print(f"{Back.RED}No moves available{Style.RESET_ALL}")
+    best_move = max(moves, key=lambda key: moves[key][1])
+    print(f"Best move: {best_move}")
 
     # Move
     return {"move": best_move}
