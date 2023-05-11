@@ -321,6 +321,10 @@ def chase_tail(game_state, player_head, moves):
         moves['up'] = (moves['up'][0], moves['up'][1] + TAIL_DESIRE)
     if 'down' in moves and player_head['y'] > tail['y']:
         moves['down'] = (moves['down'][0], moves['down'][1] + TAIL_DESIRE)
+        
+    # No need to clean move list since no danger is added
+    # Return the move list
+    return moves
 
 
 # move is called on every turn
