@@ -139,40 +139,45 @@ def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
 def head_on_collision(game_state, player_head, moves):
     # Check future moves
     for direction, move in moves.items():
-        next_moves = []
-
+        nextMoves = []
         # Get the coordinates for each safe move
-        for delta in MOVE_DELTAS[direction]:
-            next_moves.append(
-                (player_head['x'] + delta[0], player_head['y'] + delta[1]))
-
+        if direction == "left":
+            nextMoves.append((player_head['x'] - 1, player_head['y']))
+        elif direction == "right":
+            nextMoves.append((player_head['x'] + 1, player_head['y']))
+        elif direction == "up":
+            nextMoves.append((player_head['x'], player_head['y'] + 1))
+        elif direction == "down":
+            nextMoves.append((player_head['x'], player_head['y'] - 1))
         # Get the coordinates for each safe move's adjacent tile
         future_moves = []
-        for move in next_moves:
-            for delta in MOVE_DELTAS.values():
-                future_moves.append((move[0] + delta[0], move[1] + delta[1]))
-
-        # Get list of all opponents (all snakes except the player)
-        opponents = [snake for snake in game_state['board']
-                     ['snakes'] if snake['id'] != game_state['you']['id']]
-
+        for x in nextMoves:
+            future_moves.append((x[0] - 1, x[1]))
+            future_moves.append((x[0] + 1, x[1]))
+            future_moves.append((x[0], x[1] - 1))
+            future_moves.append((x[0], x[1] + 1))
+        # Get list of all snake bodies
+        opponents = game_state['board']['snakes']
+        # Remove myself from the list of opponents
+        for x in opponents:
+            if x['id'] == game_state["you"]["id"]:
+                opponents.remove(x)
+                break
         for x in future_moves:
             for oppponent in opponents:
                 opponentHead = (oppponent["head"]['x'], oppponent["head"]['y'])
-
                 # If the opponent is bigger than me
                 if opponentHead == x and oppponent["length"] >= game_state["you"]["length"]:
                     # Mark the move as potentially unsafe
                     moves[direction] = (moves[direction][0], POSSIBLE_DEATH)
                     break
-
                 # If the opponent is smaller than me
                 elif opponentHead == x and oppponent["length"] < game_state["you"]["length"]:
                     # Mark the move as a potential kill
-                    moves[direction] = (moves[direction][0],
-                                        moves[direction][1] + KILL_DESIRE)
-
-    return clean_move_list(moves)
+                    moves[direction] = (moves[direction][0], moves[direction][1] + KILL_DESIRE)
+    # Clean move list
+    moves = clean_move_list(moves)
+    return moves
 
 
 def avoid_hazards(game_state, player_head, moves, player_health):
