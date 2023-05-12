@@ -212,31 +212,31 @@ def avoid_hazards(game_state, player_head, moves, player_health):
             if i['x'] == player_head['x'] - 1 and i['y'] == player_head['y']:
                 # Hazard damage is lethal
                 if hazard_damage >= player_health:
-                    moves['left'] = moves['left'][1], CERTAIN_DEATH
+                    moves['left'] = (CERTAIN_DEATH, moves['left'][1])
                 # Hazard damage is not lethal
                 else:
-                    moves['left'] = moves['left'][1], HARM
+                    moves['left'] = (HARM, moves['left'][1])
             if i['x'] == player_head['x'] + 1 and i['y'] == player_head['y']:
                 # Hazard damage is lethal
                 if hazard_damage >= player_health:
-                    moves['right'] = moves['right'][1], CERTAIN_DEATH
+                    moves['right'] = (CERTAIN_DEATH, moves['right'][1])
                 # Hazard damage is not lethal
                 else:
-                    moves['right'] = moves['right'][1], HARM
+                    moves['right'] = (HARM, moves['right'][1])
             if i['y'] == player_head['y'] - 1 and i['x'] == player_head['x']:
                 # Check if hazard damage is lethal
                 if hazard_damage >= player_health:
-                    moves['down'] = moves['down'][1], CERTAIN_DEATH
+                    moves['down'] = (CERTAIN_DEATH, moves['down'][1])
                 # Hazard damage is not lethal
                 else:
-                    moves['down'] = moves['down'][1], HARM
+                    moves['down'] = (HARM, moves['down'][1])
             if i['y'] == player_head['y'] + 1 and i['x'] == player_head['x']:
                 # Check if hazard damage is lethal
                 if hazard_damage >= player_health:
-                    moves['up'] = moves['up'][1], CERTAIN_DEATH
+                    moves['up'] = (CERTAIN_DEATH, moves['up'][1])
                 # Hazard damage is not lethal
                 else:
-                    moves['up'] = moves['up'][1], HARM
+                    moves['up'] = (HARM, moves['up'][1])
 
     # Clean move list
     moves = clean_move_list(moves)
