@@ -119,12 +119,13 @@ def avoid_borders(player_head, board_width, board_height, moves):
 
 def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
     # Ignore tails unless constrictor
+    snakes_copy = snakes.copy()
     if not constrictor:
-        for snake in snakes:
+        for snake in snakes_copy:
             snake['body'].pop()
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
-    for snake in snakes:
+    for snake in snakes_copy:
         # if the snake is the player danger = 5 otherwise danger = 4
         danger = CERTAIN_DEATH if snake['id'] == game_state['you']['id'] else PROBABLE_DEATH
         for body_part in snake['body']:
