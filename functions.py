@@ -119,14 +119,10 @@ def avoid_borders(player_head, board_width, board_height, moves):
 
 
 def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
-    # Check for constrictor game mode
-    if constrictor is False:
-        # Check if the tail is going to move out of the way
+    # Ignore tails unless constrictor
+    if not constrictor:
         for snake in snakes:
-            # Check if the snake just ate food
-            if snake['body'][-1] != snake['body'][-2]:  # Tail doubled up
-                # Remove the tail from the list of snakes
-                snake['body'].pop()
+            snake['body'].pop()
 
     # Prevent the Battlesnake from colliding with other Battlesnakes including itself
     for snake in snakes:
@@ -135,16 +131,16 @@ def avoid_snakes(game_state, player_head, moves, snakes, constrictor):
         for body_part in snake['body']:
             # Check if body part is to the left of head
             if body_part['x'] == player_head['x'] - 1 and body_part['y'] == player_head['y']:
-                moves['left'] = (moves['left'][0], danger)
+                moves['left'] = (danger, moves['left'][1])
             # Check if body part is to the right of head
             elif body_part['x'] == player_head['x'] + 1 and body_part['y'] == player_head['y']:
-                moves['right'] = (moves['right'][0], danger)
+                moves['right'] = (danger, moves['right'][1])
             # Check if body part is below head
             elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] - 1:
-                moves['down'] = (moves['down'][0], danger)
+                moves['down'] = (danger, moves['down'][1])
             # Check if body part is above head
             elif body_part['x'] == player_head['x'] and body_part['y'] == player_head['y'] + 1:
-                moves['up'] = (moves['up'][0], danger)
+                moves['up'] = (danger, moves['up'][1])
 
     # Clean move list
     moves = clean_move_list(moves)
