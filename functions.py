@@ -103,13 +103,13 @@ def clean_move_list(moves):
 def avoid_borders(player_head, board_width, board_height, moves):
     # Check if the Battlesnake is at the edge of the board
     if player_head['x'] == 0:
-        moves['left'] = (moves['left'][0], CERTAIN_DEATH)
+        moves['left'] = (CERTAIN_DEATH, moves['left'][1])
     if player_head['x'] == board_width - 1:
-        moves['right'] = (moves['right'][0], CERTAIN_DEATH)
+        moves['right'] = (CERTAIN_DEATH, moves['right'][1])
     if player_head['y'] == 0:
-        moves['down'] = (moves['down'][0], CERTAIN_DEATH)
+        moves['down'] = (CERTAIN_DEATH, moves['down'][1])
     if player_head['y'] == board_height - 1:
-        moves['up'] = (moves['up'][0], CERTAIN_DEATH)
+        moves['up'] = (CERTAIN_DEATH, moves['up'][1])
 
     # Clean move list
     moves = clean_move_list(moves)
@@ -340,7 +340,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     # reset list of valid moves
     # direction, danger level, desire level
-    moves = {"up": (0, 0), "down": (0, 0), "left": (0, 0), "right": (0, 0)}
+    moves = {"right": (0, 0), "left": (0, 0), "up": (0, 0), "down": (0, 0)}
 
     # locate the head of the snake
     player_head = game_state["you"]["body"][0]
