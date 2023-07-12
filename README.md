@@ -15,7 +15,7 @@ The danger scord is set to a specific level based on the situation. The levels a
 - **LEVEL 5** (Certain death).
   - Moving out of bounds in game modes that don't support wall wrapping.
   - Moving into self.
-  - Moving into hazrd sauce when hp is less than the hazard sauce damage.
+  - Moving into hazard sauce when hp is less than the hazard sauce damage.
 
 - **LEVEL 4** (Probable death).
   - Moving into another snake's body.
