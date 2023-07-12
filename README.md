@@ -1,4 +1,4 @@
-# My Main Battlesnake
+# My Battlesnake
 
 ## What is Battlesnake?
 
@@ -6,11 +6,11 @@ Battlesnake is a multiplayer snake game where your snake is controlled by code. 
 
 ## Behavior
 
-The snake currently makes it's move calculations based on a danger/desire system. Moves are given a danger and desire score each turn. The move with the lowest danger score is chosen. If there are multiple moves with the same danger score, the desire score is used as a tie breaker.
+This snake is a heuristics snake, meaning that unlike tree seach snakes it takes very little time to think of a move. The snake currently makes it's move calculations based on a danger/desire system. Moves are given a danger and desire score each turn. The move with the lowest danger score is chosen. If there are multiple moves with the same danger score, the desire score is used as a tie breaker.
 
 ### Danger
 
-The danger scord is set to a specific level based on the situation. The levels are as follows:
+The danger scored is set to a specific level based on the situation. The levels are as follows:
 
 - **LEVEL 5** (Certain death).
   - Moving out of bounds in game modes that don't support wall wrapping.
