@@ -1,8 +1,9 @@
 # My Main Battlesnake
 
 ## What is Battlesnake?
+![](https://github.com/DavisStanko/battlesnake/blob/main/battlesnake.gif)
 
-Battlesnake is a multiplayer snake game where your snake is controlled by code. Get started at [play.battlesnake.com](https://play.battlesnake.com).
+Battlesnake is a multiplayer snake game where your snake is controlled by code. Shown above is a game my snake (red) won on the royale map. Get started at [play.battlesnake.com](https://play.battlesnake.com).
 
 ## Behavior
 
