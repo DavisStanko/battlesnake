@@ -1,4 +1,4 @@
-# My Main Battlesnake
+# My Battlesnake
 
 ## What is Battlesnake?
 <p align="center">
