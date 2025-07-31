@@ -234,22 +234,120 @@ def aim_for_middle(game_state, player_head, moves):
     return moves
 
 
-def chase_tail(game_state, player_head, moves):
-    # find tail
-    tail = game_state['you']['body'][-1]
-
-    # Add desire to move towards tail
-    # Desire +1
-    # check if move exists and is towards tail
-    if 'right' in moves and player_head['x'] < tail['x']:
-        moves['right'] = (moves['right'][0], moves['right'][1] + TAIL_DESIRE)
-    if 'left' in moves and player_head['x'] > tail['x']:
-        moves['left'] = (moves['left'][0], moves['left'][1] + TAIL_DESIRE)
-    if 'up' in moves and player_head['y'] < tail['y']:
-        moves['up'] = (moves['up'][0], moves['up'][1] + TAIL_DESIRE)
-    if 'down' in moves and player_head['y'] > tail['y']:
-        moves['down'] = (moves['down'][0], moves['down'][1] + TAIL_DESIRE)
+def pathfind_to_tail(start, target, obstacles, board_width, board_height):
+    """
+    Use BFS to find if there's a path from start to target avoiding obstacles.
+    Returns True if path exists, False otherwise.
+    """
+    from collections import deque
+    
+    # Edge case: if start is the same as target
+    if start == target:
+        return True
+    
+    # Initialize BFS
+    queue = deque([start])
+    visited = set([start])
+    
+    # Directions: up, down, left, right
+    directions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+    
+    while queue:
+        current_x, current_y = queue.popleft()
         
-    # No need to clean move list since no danger is added
-    # Return the move list
+        # Check all adjacent cells
+        for dx, dy in directions:
+            next_x, next_y = current_x + dx, current_y + dy
+            next_pos = (next_x, next_y)
+            
+            # Check bounds
+            if next_x < 0 or next_x >= board_width or next_y < 0 or next_y >= board_height:
+                continue
+            
+            # Check if already visited
+            if next_pos in visited:
+                continue
+                
+            # Check if it's an obstacle
+            if next_pos in obstacles:
+                continue
+            
+            # Check if we reached the target
+            if next_pos == target:
+                return True
+            
+            # Add to queue and mark as visited
+            queue.append(next_pos)
+            visited.add(next_pos)
+    
+    return False
+
+
+def chase_tail(game_state, player_head, moves):
+    """
+    Enhanced tail chasing logic that uses pathfinding to avoid dead ends.
+    Marks moves as HARM if they would eliminate the path to the tail.
+    """
+    # Get current snake body
+    snake_body = game_state['you']['body']
+    board_width = game_state['board']['width']
+    board_height = game_state['board']['height']
+    
+    # Calculate where the tail will be after the snake moves (tail advances one position)
+    # The new tail position will be the second-to-last segment of the current body
+    if len(snake_body) > 1:
+        future_tail = (snake_body[-2]['x'], snake_body[-2]['y'])
+    else:
+        # If snake is length 1, tail stays at head position
+        future_tail = (player_head['x'], player_head['y'])
+    
+    # Build obstacles set (all snake bodies except the current tail, plus other snakes)
+    obstacles = set()
+    
+    # Add our own body (excluding the tail which will move)
+    for i, segment in enumerate(snake_body[:-1]):  # Exclude tail
+        obstacles.add((segment['x'], segment['y']))
+    
+    # Add other snakes' bodies
+    for snake in game_state['board']['snakes']:
+        if snake['id'] != game_state['you']['id']:
+            for segment in snake['body']:
+                obstacles.add((segment['x'], segment['y']))
+    
+    # Add hazards as obstacles
+    for hazard in game_state['board']['hazards']:
+        obstacles.add((hazard['x'], hazard['y']))
+    
+    # Check each possible move
+    move_directions = {
+        'up': (0, 1),
+        'down': (0, -1),
+        'left': (-1, 0),
+        'right': (1, 0)
+    }
+    
+    for direction, (dx, dy) in move_directions.items():
+        if direction in moves:
+            # Calculate new head position after this move
+            new_head_x = player_head['x'] + dx
+            new_head_y = player_head['y'] + dy
+            new_head_pos = (new_head_x, new_head_y)
+            
+            # Create obstacles for this specific move (add current head position as obstacle)
+            move_obstacles = obstacles.copy()
+            move_obstacles.add((player_head['x'], player_head['y']))
+            
+            # Check if there's still a path from new head position to future tail
+            has_path = pathfind_to_tail(new_head_pos, future_tail, move_obstacles, board_width, board_height)
+            
+            if not has_path:
+                # No path to tail means potential dead end - mark as HARM
+                moves[direction] = (HARM, moves[direction][1])
+            else:
+                # Path exists, add small tail desire bonus
+                moves[direction] = (moves[direction][0], moves[direction][1] + TAIL_DESIRE)
+    
+    # Clean move list to ensure we don't trap ourselves
+    moves = clean_move_list(moves)
+    
     return moves
