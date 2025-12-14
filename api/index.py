@@ -1,4 +1,4 @@
-from . import functions
+import functions
 import os
 from colorama import Back, Style
 
