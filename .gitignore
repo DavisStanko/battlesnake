@@ -1,0 +1,12 @@
+*
+!.gitignore
+!functions.py
+!main.py
+!server.py
+!requirements.txt
+!README.md
+!LICENSE.md
+!demo.gif
+!vercel.json
+!api/
+!api/*
