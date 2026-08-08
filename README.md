@@ -2,7 +2,9 @@
 
 My competitive Battlesnake API that leverages a multi-variable heuristic engine to outmaneuver opponents and maintain a Top 50 global ranking. 
 
-![Battlesnake screenshot](demo.gif)
+<p align="center">
+  <img src="demo.gif" alt="Battlesnake screenshot" />
+</p>
 
 ## Features
 
