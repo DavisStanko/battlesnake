@@ -2,6 +2,8 @@
 
 My competitive Battlesnake API that leverages a multi-variable heuristic engine to outmaneuver opponents and maintain a Top 50 global ranking. 
 
+![Battlesnake screenshot](demo.gif)
+
 ## Features
 
 - **Heuristic Engine** — evaluates moves based on multiple variables such as danger levels, desire for food, and maintaining safe space.
