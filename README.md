@@ -13,23 +13,6 @@ My competitive Battlesnake API that leverages a multi-variable heuristic engine 
 
 You can play against or observe this snake on the official [Battlesnake Platform](https://play.battlesnake.com/profile/davisstanko).
 
-To run this Battlesnake locally:
-
-1. Clone the repository and install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-*(Alternatively, you can use `poetry install`)*
-
-2. Start the Flask server:
-
-```bash
-python main.py
-```
-
-The server will run locally on port `8080` (or the port specified by the `PORT` environment variable). You can then use the [Battlesnake CLI](https://docs.battlesnake.com/references/cli) to test it locally.
-
 ## License
 
 This project is licensed under the [GPL-3.0](LICENSE.md)
