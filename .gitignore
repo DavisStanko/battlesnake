@@ -1,12 +1,15 @@
-*
-!.gitignore
-!functions.py
-!main.py
-!server.py
-!requirements.txt
-!README.md
-!LICENSE.md
-!demo.gif
-!vercel.json
-!api/
-!api/*
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# A/B Test Results
+ab_results/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
