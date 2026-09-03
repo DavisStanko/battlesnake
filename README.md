@@ -37,15 +37,21 @@ go install github.com/BattlesnakeOfficial/rules/cli/battlesnake@latest
 
 ### 2. Running the Server
 
-Start the snake server on port `8000` (or any custom port using the `PORT` environment variable):
+Start the snake server using `STRATEGY_NAME` and `PORT` environment variables (defaults to `baseline` strategy and port `8000`):
 
 ```bash
-PORT=8000 python main.py
+# Baseline strategy on port 8000
+STRATEGY_NAME=baseline PORT=8000 python main.py
+
+# Variant strategy on port 8001
+STRATEGY_NAME=variant PORT=8001 python main.py
 ```
+
+Available strategies are located in the `strategies/` directory (`baseline`, `variant`).
 
 ### 3. Running Test Games
 
-Once the server is running on port 8000, you can run test games using the Battlesnake CLI in various modes:
+Once a server is running, you can run test games using the Battlesnake CLI in various modes:
 
 * **Headless (CLI output only):**
   ```bash
@@ -60,6 +66,19 @@ Once the server is running on port 8000, you can run test games using the Battle
 * **GUI / Browser Visualizer:**
   ```bash
   battlesnake play --url http://localhost:8000 --browser --delay 200
+  ```
+
+* **Strategy vs. Strategy Match (in Browser):**
+  Run two servers on separate ports, then launch a match between them:
+  ```bash
+  # In Terminal 1:
+  STRATEGY_NAME=baseline PORT=8000 python main.py
+
+  # In Terminal 2:
+  STRATEGY_NAME=variant PORT=8001 python main.py
+
+  # In Terminal 3:
+  battlesnake play -u http://localhost:8000 -n Baseline -u http://localhost:8001 -n Variant --delay 400 --browser
   ```
 
 ## License
